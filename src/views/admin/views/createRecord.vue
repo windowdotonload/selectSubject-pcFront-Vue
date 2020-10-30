@@ -200,8 +200,8 @@ export default {
     },
     // 创建记录后跳转到详细操作页，添加学生和老师的信息
     toDetail(row, column, event) {
-      // console.log(row);
-      this.$router.push({ name: "recordDetail" });
+      // console.log("rowData is ", row);
+      this.$router.push({ path: `recordDetail/${row.id}` });
     },
     dialogClose() {
       this.dialogVisible = false;
@@ -256,7 +256,7 @@ export default {
   margin-top: 10px;
   margin-left: -20px;
   border: none;
-  border-top: 1px solid #34495e;
+  border-top: 1px solid #dfe6e9;
 }
 .format {
   width: 80%;

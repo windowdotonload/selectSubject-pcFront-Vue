@@ -70,7 +70,10 @@
 
 <script>
 export default {
+  props: ["id"],
   created() {
+    // console.log("stu id is  ", this.id);
+    this.pageParams.recordid = this.id;
     this.showStuData();
   },
   data() {
@@ -81,6 +84,7 @@ export default {
       pageParams: {
         pagesize: 5,
         pagenumber: 1,
+        recordid: 0,
       },
       count: 0,
     };

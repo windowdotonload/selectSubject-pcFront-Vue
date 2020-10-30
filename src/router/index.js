@@ -36,7 +36,8 @@ const admin = [
         },
       },
       {
-        path: '/recordDetail', name: 'recordDetail',
+        path: '/recordDetail/:id', name: 'recordDetail',
+        props: true,
         component: () => import('@/views/admin/views/recordDetail'),
       },
     ]
