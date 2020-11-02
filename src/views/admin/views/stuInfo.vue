@@ -15,6 +15,7 @@
         :limit="1"
         :on-exceed="handleExceed"
         :on-success="successResponse"
+        :before-upload="addRecordId"
         :on-error="errResponse"
         :file-list="fileList"
       >
@@ -115,10 +116,16 @@ export default {
         } 个文件`
       );
     },
+    addRecordId() {
+      // console.log("before");
+      // console.log(this.id);
+      this.$api.addRecordId({ id: this.id });
+    },
     async successResponse(val) {
+      // console.log("success");
       // console.log("上传成功钩子", val);
       if (val.status === 0) {
-        this.$message.success(val.msg);
+        // this.$message.success(val.msg);
         this.loading = true;
         this.showStuData();
         this.fileList = [];

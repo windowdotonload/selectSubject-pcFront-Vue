@@ -6,5 +6,9 @@ export default {
     getRecord: (params) => get('/getRecord', params),
     deleteRecord: (params) => post('/deleteRecord', params),
     checkUploadStatus: (params) => get('/checkUploadStatus', params),
-    showStudent: (params) => get('/showStudent', params)
+    showStudent: (params) => get('/showStudent', params),
+    addRecordId: (params) => get('/addRecordId', params),
+    addTacher: (params) => post('/addTacher', params),
+    showTeacher: (params) => get('/showTeacher', params),
+    editTeacher: (params) => post('/editTeacher', params)
 }
