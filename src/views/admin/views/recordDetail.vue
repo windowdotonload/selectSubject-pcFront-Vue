@@ -5,7 +5,7 @@
         <stu :id="recordid"></stu>
       </el-tab-pane>
       <el-tab-pane label="老师管理" name="tea">
-        <tea></tea>
+        <tea :id="recordid"></tea>
       </el-tab-pane>
     </el-tabs>
   </div>

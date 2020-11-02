@@ -10,5 +10,7 @@ export default {
     addRecordId: (params) => get('/addRecordId', params),
     addTacher: (params) => post('/addTacher', params),
     showTeacher: (params) => get('/showTeacher', params),
-    editTeacher: (params) => post('/editTeacher', params)
+    editTeacher: (params) => post('/editTeacher', params),
+    addTeaToRecord: (params) => post('/addTeaToRecord', params),
+    showSelectTeacher: (params) => get('/showSelectTeacher', params)
 }

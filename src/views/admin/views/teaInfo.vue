@@ -19,6 +19,7 @@
       title="选择课程设计老师"
       :visible.sync="dialogVisible"
       width="60%"
+      @close="selectClose"
     >
       <el-table
         ref="multipleTable"
@@ -40,7 +41,9 @@
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="selectTeachr"> 确 定 </el-button>
+          <el-button type="primary" @click="submitSelectTeacher">
+            确 定
+          </el-button>
         </span>
       </div>
     </el-dialog>
@@ -49,6 +52,7 @@
 
 <script>
 export default {
+  props: ["id"],
   data() {
     return {
       tableData: [],
@@ -61,12 +65,21 @@ export default {
         pagenumber: 1,
       },
       multipleSelection: [],
+      postParams: {
+        recordid: 0,
+        teacherid: [],
+      },
     };
   },
   created() {
+    this.postParams.recordid = this.id;
     this.showTeacher();
+    this.showSelectTeacher();
   },
   methods: {
+    selectClose() {
+      this.$refs.multipleTable.clearSelection();
+    },
     selectTeacher() {
       this.dialogVisible = true;
     },
@@ -75,10 +88,26 @@ export default {
       this.tableData = res.data.pageData;
       this.count = res.data.count;
     },
-    selectTeachr() {},
+    async showSelectTeacher() {
+      let res = await this.$api.showSelectTeacher({ id: this.id });
+    },
+    async submitSelectTeacher() {
+      // console.log(this.postParams);
+      let res = await this.$api.addTeaToRecord(this.postParams);
+      if (res.msg === "success") {
+        this.dialogVisible = false;
+      }
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
+      this.postParams.teacherid = [];
+      // console.log(this.id);
+      // console.log(this.multipleSelection);
+      this.multipleSelection.forEach((item) => {
+        if (!this.postParams.teacherid.includes(item.id)) {
+          this.postParams.teacherid.push(item.id);
+        }
+      });
     },
   },
 };
