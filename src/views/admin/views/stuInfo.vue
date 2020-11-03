@@ -21,7 +21,7 @@
       >
         <el-button size="small" type="primary">点击上传</el-button>
         <i class="el-icon-warning-outline icon-self"></i>
-        <span class="tip">只能上传xlsx文件，且不超过500kb </span>
+        <span class="tip">只能上传xlsx文件</span>
       </el-upload>
       <el-table
         :data="tableData"
@@ -65,6 +65,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 circle
+                @click="editStudent(row)"
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -78,6 +79,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 circle
+                @click="deleteStudent(row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -96,6 +98,38 @@
       >
       </el-pagination>
     </div>
+
+    <!-- 编辑学生信息对话框 -->
+    <el-dialog
+      title="编辑学生信息"
+      :visible.sync="editDialogVisible"
+      width="30%"
+    >
+      <el-form
+        :model="editStudentForm"
+        :rules="rules"
+        ref="editStudentForm"
+        label-width="80px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="重置密码" prop="password">
+          <div class="format">
+            <el-input v-model="editStudentForm.password"></el-input>
+          </div>
+        </el-form-item>
+        <el-form-item label="所选老师" prop="select_teacher">
+          <div class="format">
+            <el-input v-model="editStudentForm.select_teacher"></el-input>
+          </div>
+        </el-form-item>
+      </el-form>
+      <div style="width: 100%; text-align: center">
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitEditStudent">确 定</el-button>
+        </span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,6 +142,13 @@ export default {
     this.showStuData();
   },
   data() {
+    const validateLength = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error("输入密码长度不小于六位"));
+      } else {
+        callback();
+      }
+    };
     return {
       fileList: [],
       tableData: [],
@@ -118,9 +159,33 @@ export default {
         recordid: 0,
       },
       count: 0,
+      editDialogVisible: false,
+      editStudentForm: {
+        password: "",
+        select_teacher: "",
+      },
+      rules: {
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { validator: validateLength, trigger: "blur" },
+        ],
+        select_teacher: [
+          { required: true, message: "请输入教师姓名", trigger: "blur" },
+        ],
+      },
     };
   },
   methods: {
+    editStudent(row) {
+      // console.log(row);
+      this.editDialogVisible = true;
+    },
+    submitEditStudent() {
+      this.editDialogVisible = false;
+    },
+    deleteStudent(row) {
+      console.log(row);
+    },
     handleSizeChange(val) {
       this.pageParams.pagesize = val;
       this.showStuData();
@@ -196,5 +261,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.format {
+  width: 80%;
 }
 </style>
