@@ -52,6 +52,36 @@
         </el-table-column>
         <el-table-column prop="select_subject" label="所选课题">
         </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template v-slot="{ row }">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="编辑"
+              placement="top"
+            >
+              <el-button
+                size="mini"
+                type="primary"
+                icon="el-icon-edit"
+                circle
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="删除"
+              placement="top"
+            >
+              <el-button
+                size="mini"
+                type="danger"
+                icon="el-icon-delete"
+                circle
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="pagination">

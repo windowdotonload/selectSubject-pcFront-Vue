@@ -15,6 +15,9 @@
       <el-table-column prop="teachername" label="教师姓名"> </el-table-column>
       <el-table-column prop="specialized_subject" label="所带专业系别">
       </el-table-column>
+      <el-table-column prop="phonenumber" label="手机号"> </el-table-column>
+      <el-table-column prop="tecentqnumber" label="QQ"> </el-table-column>
+      <el-table-column prop="professional" label="教师职称"> </el-table-column>
       <el-table-column prop="titlenumber" label="毕设题目数量" align="center">
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -46,7 +49,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column type="selection" width="50"> </el-table-column>
         <el-table-column prop="teachername" label="姓名" width="300">
         </el-table-column>
         <el-table-column
@@ -56,6 +59,18 @@
         >
         </el-table-column>
       </el-table>
+      <div style="width: 100%; text-align: center; margin-top: 10px">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageParams.pagenumber"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="5"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="count"
+        >
+        </el-pagination>
+      </div>
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -78,7 +93,6 @@ export default {
       count: 0,
       titlenumber: 0,
       dialogVisible: false,
-      tableData: [],
       pageParams: {
         pagesize: 5,
         pagenumber: 1,
@@ -96,6 +110,14 @@ export default {
     this.showSelectTeacher();
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageParams.pagesize = val;
+      this.showTeacher();
+    },
+    handleCurrentChange(val) {
+      this.pageParams.pagenumber = val;
+      this.showTeacher();
+    },
     selectClose() {
       this.$refs.multipleTable.clearSelection();
     },
