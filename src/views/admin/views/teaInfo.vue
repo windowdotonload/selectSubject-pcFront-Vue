@@ -9,12 +9,30 @@
       选择教师
     </el-button>
     <el-table :data="selectTableData" style="width: 100%">
-      <el-table-column prop="" label="用户名"> </el-table-column>
-      <el-table-column prop="" label="密码"> </el-table-column>
-      <el-table-column prop="" label="教师姓名"> </el-table-column>
-      <el-table-column prop="" label="所带专业系别"> </el-table-column>
-      <el-table-column prop="" label="毕设题目数量"> </el-table-column>
+      <el-table-column prop="username" label="用户名"> </el-table-column>
+      <el-table-column prop="password" label="密码" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="teachername" label="教师姓名"> </el-table-column>
+      <el-table-column prop="specialized_subject" label="所带专业系别">
+      </el-table-column>
+      <el-table-column prop="titlenumber" label="毕设题目数量" align="center">
+      </el-table-column>
+      <el-table-column align="center" label="操作">
+        <template v-slot="{ row }">
+          <el-tooltip class="item" effect="dark" content="删除" placement="top">
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              size="mini"
+              @click="deleteSelectTeacher(row)"
+            ></el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
     </el-table>
+
+    <!-- 选择老师对话框 -->
     <el-dialog
       title="选择课程设计老师"
       :visible.sync="dialogVisible"
@@ -58,6 +76,7 @@ export default {
       tableData: [],
       selectTableData: [],
       count: 0,
+      titlenumber: 0,
       dialogVisible: false,
       tableData: [],
       pageParams: {
@@ -90,14 +109,19 @@ export default {
     },
     async showSelectTeacher() {
       let res = await this.$api.showSelectTeacher({ id: this.id });
+      if (res.msg === "success") {
+        this.selectTableData = res.data;
+      }
     },
     async submitSelectTeacher() {
       // console.log(this.postParams);
       let res = await this.$api.addTeaToRecord(this.postParams);
       if (res.msg === "success") {
         this.dialogVisible = false;
+        this.showSelectTeacher();
       }
     },
+
     handleSelectionChange(val) {
       this.multipleSelection = val;
       this.postParams.teacherid = [];
@@ -108,6 +132,35 @@ export default {
           this.postParams.teacherid.push(item.id);
         }
       });
+    },
+
+    // 根据对应的记录id和教师id在关系表中删除
+    deleteSelectTeacher(row) {
+      // console.log(row);
+      this.$confirm("是否确认删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await this.$api.deleteSelectTeacher({
+            teacherid: row.id,
+            recordid: this.id,
+          });
+          if (res.msg === "success") {
+            this.showSelectTeacher();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };

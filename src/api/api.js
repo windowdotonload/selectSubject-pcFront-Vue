@@ -12,5 +12,6 @@ export default {
     showTeacher: (params) => get('/showTeacher', params),
     editTeacher: (params) => post('/editTeacher', params),
     addTeaToRecord: (params) => post('/addTeaToRecord', params),
-    showSelectTeacher: (params) => get('/showSelectTeacher', params)
-}
+    showSelectTeacher: (params) => get('/showSelectTeacher', params),
+    deleteSelectTeacher: (params) => post('/deleteSelectTeacher', params)
+}   
