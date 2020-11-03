@@ -13,6 +13,10 @@
         <el-table-column prop="teachername" label="教师姓名"> </el-table-column>
         <el-table-column prop="specialized_subject" label="所带专业系别">
         </el-table-column>
+        <el-table-column prop="phonenumber" label="手机号"> </el-table-column>
+        <el-table-column prop="tecentqnumber" label="QQ"> </el-table-column>
+        <el-table-column prop="professional" label="教师职称">
+        </el-table-column>
         <el-table-column>
           <template v-slot:default="{ row }">
             <el-button
@@ -85,6 +89,30 @@
               ></el-input>
             </div>
           </el-form-item>
+          <el-form-item label="手机号" prop="phonenumber">
+            <div class="format">
+              <el-input
+                v-model="teacherForm.phonenumber"
+                placeholder="请输入教师所带专业学科"
+              ></el-input>
+            </div>
+          </el-form-item>
+          <el-form-item label="QQ号">
+            <div class="format">
+              <el-input
+                v-model="teacherForm.tecentqnumber"
+                placeholder="请输入教师所带专业学科"
+              ></el-input>
+            </div>
+          </el-form-item>
+          <el-form-item label="职称" prop="professional">
+            <div class="format">
+              <el-input
+                v-model="teacherForm.professional"
+                placeholder="请输入教师职称"
+              ></el-input>
+            </div>
+          </el-form-item>
         </el-form>
         <div style="width: 100%; display: flex; justify-content: center">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -138,7 +166,32 @@
               ></el-input>
             </div>
           </el-form-item>
+          <el-form-item label="手机号" prop="phonenumber">
+            <div class="format">
+              <el-input
+                v-model="editForm.phonenumber"
+                placeholder="请输入教师所带专业学科"
+              ></el-input>
+            </div>
+          </el-form-item>
+          <el-form-item label="QQ号">
+            <div class="format">
+              <el-input
+                v-model="editForm.tecentqnumber"
+                placeholder="请输入教师所带专业学科"
+              ></el-input>
+            </div>
+          </el-form-item>
+          <el-form-item label="职称" prop="professional">
+            <div class="format">
+              <el-input
+                v-model="editForm.professional"
+                placeholder="请输入教师职称"
+              ></el-input>
+            </div>
+          </el-form-item>
         </el-form>
+
         <div style="width: 100%; display: flex; justify-content: center">
           <el-button @click="dialogEditVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitEditTacher">
@@ -153,6 +206,13 @@
 <script>
 export default {
   data() {
+    const checkPhoneNumber = (rule, value, callback) => {
+      if (!/^1[3456789]\d{9}$/.test(value)) {
+        return callback(new Error("请输入正确的手机号"));
+      } else {
+        callback();
+      }
+    };
     const validateLength = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error("输入密码长度不小于六位"));
@@ -187,12 +247,22 @@ export default {
             trigger: "blur",
           },
         ],
+        phonenumber: [
+          { required: true, message: "请输入教师手机号", trigger: "blur" },
+          { validator: checkPhoneNumber, trigger: "blur" },
+        ],
+        professional: [
+          { required: true, message: "请输入教师职称", trigger: "blur" },
+        ],
       },
       teacherForm: {
         username: "",
         password: "",
         teachername: "",
         specialized_subject: "",
+        phonenumber: "",
+        tecentqnumber: "",
+        professional: "",
       },
       editForm: {
         id: 0,
@@ -200,6 +270,9 @@ export default {
         password: "",
         teachername: "",
         specialized_subject: "",
+        phonenumber: "",
+        tecentqnumber: "",
+        professional: "",
       },
     };
   },
@@ -226,8 +299,10 @@ export default {
     },
     dialogClose() {
       this.dialogVisible = false;
+      this.teacherForm.tecentqnumber = "";
       this.$refs.teacherForm.resetFields();
     },
+    // 提交添加老师信息
     submitTacher() {
       this.$refs.teacherForm.validate(async (valid) => {
         if (valid) {
@@ -252,6 +327,7 @@ export default {
 
       this.dialogEditVisible = true;
     },
+    // 提交修改老师信息
     submitEditTacher() {
       this.$refs.teacherEditForm.validate(async (valid) => {
         if (valid) {
@@ -270,6 +346,7 @@ export default {
     },
     EditClose() {
       this.dialogEditVisible = false;
+      this.editForm.phonenumber = "";
       this.$refs.teacherEditForm.resetFields();
     },
   },
