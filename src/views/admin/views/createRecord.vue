@@ -30,7 +30,7 @@
                 icon="el-icon-edit"
                 circle
                 size="mini"
-                @click.stop="deleteRow(row)"
+                @click.stop="editRow(row)"
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -126,11 +126,43 @@
       width="30%"
       @close="editDialogClose"
     >
-      <span>这是一段信息</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submiEditRecord">确 定</el-button>
-      </span>
+      <el-form
+        :rules="editRules"
+        ref="recordForm"
+        :model="editRecordForm"
+        label-width="100px"
+      >
+        <el-form-item label="记录名称" prop="recordname">
+          <div class="format">
+            <el-input
+              v-model="editRecordForm.recordname"
+              :placeholder="exampleText"
+            ></el-input>
+          </div>
+        </el-form-item>
+        <el-form-item label="学生人数" prop="studentnumber">
+          <div class="format">
+            <el-input
+              v-model.number="editRecordForm.studentnumber"
+              placeholder="请输入数字"
+            ></el-input>
+          </div>
+        </el-form-item>
+        <el-form-item label="教师人数" prop="teachernumber">
+          <div class="format">
+            <el-input
+              v-model.number="editRecordForm.teachernumber"
+              placeholder="请输入数字"
+            ></el-input>
+          </div>
+        </el-form-item>
+      </el-form>
+      <div style="width: 100%; text-align: center">
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submiEditRecord">确 定</el-button>
+        </span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -149,6 +181,21 @@ export default {
         return callback();
       }
     };
+    let editIsNumber = (rule, value, callback) => {
+      // console.log(value);
+      // console.log(typeof value);
+      if (value == "") {
+        callback();
+        return;
+      }
+      let isnumber = typeof value == "number";
+      console.log(isnumber);
+      if (!isnumber) {
+        return callback(new Error("请输入数字"));
+      } else {
+        return callback();
+      }
+    };
     return {
       tableData: [],
       dialogVisible: false,
@@ -157,6 +204,11 @@ export default {
       recordForm: {
         recordname: "",
         deadline: "",
+        studentnumber: "",
+        teachernumber: "",
+      },
+      editRecordForm: {
+        recordname: "",
         studentnumber: "",
         teachernumber: "",
       },
@@ -199,6 +251,12 @@ export default {
           { validator: isNumber, trigger: "blur" },
         ],
       },
+      editRules: {
+        recordname: [],
+        deadline: [],
+        studentnumber: [{ validator: editIsNumber, trigger: "blur" }],
+        teachernumber: [{ validator: editIsNumber, trigger: "blur" }],
+      },
     };
   },
   async created() {
@@ -208,6 +266,9 @@ export default {
     editDialogClose() {},
     submiEditRecord() {
       this.editDialogVisible = false;
+    },
+    editRow(row) {
+      this.editDialogVisible = true;
     },
     // 删除记录数据，同时也要删除与记录有关联的学生和老师的数据
     deleteRow(row) {
