@@ -5,22 +5,44 @@
     >
     <splitline></splitline>
     <el-table :data="tableData" style="width: 100%; margin-top: 10px">
-      <el-table-column prop="" label="题目名称"> </el-table-column>
-      <el-table-column prop="" label="题目描述"> </el-table-column>
-      <el-table-column prop="" label="选题状态"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column prop="title_name" label="题目名称"> </el-table-column>
+      <el-table-column prop="title_description" label="题目描述">
+      </el-table-column>
+      <el-table-column label="选题状态" align="center">
+        <template v-slot="{ row }">
+          <el-tag v-if="row.status == 0">待选</el-tag>
+          <el-tag type="success" v-else-if="row.status == 1">选择中</el-tag>
+          <el-tag type="info" v-else-if="row.status == 2">已被选</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center">
         <template>
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button type="primary" icon="el-icon-edit" circle></el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              size="mini"
+            ></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
-            <el-button type="danger" icon="el-icon-delete" circle></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              size="mini"
+            ></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog title="添加题目信息" :visible.sync="dialogVisible" width="30%">
+    <el-dialog
+      @close="closeDialog"
+      title="添加题目信息"
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
       <el-form
         ref="titleForm"
         :model="addTitleFrom"
@@ -32,7 +54,7 @@
         </el-form-item>
         <el-form-item label="题目描述" prop="title_description">
           <el-input
-            v-model="addTitleFrom.title_name"
+            v-model="addTitleFrom.title_description"
             type="textarea"
             rows="5"
           ></el-input>
@@ -72,14 +94,30 @@ export default {
       },
     };
   },
+  created() {
+    this.showTitle();
+  },
   methods: {
+    closeDialog() {
+      this.$refs.titleForm.resetFields();
+    },
     addTitle() {
       this.dialogVisible = true;
     },
+    async showTitle() {
+      let res = await this.$api.showTitle();
+      this.tableData = res.data;
+    },
     submitTitle() {
-      this.$refs.titleForm.validate((valid) => {
+      this.$refs.titleForm.validate(async (valid) => {
         if (valid) {
-          alert("submit!");
+          // console.log(this.addTitleFrom);
+          let res = await this.$api.addTitleInfo(this.addTitleFrom);
+          if (res.msg === "success") {
+            this.showTitle();
+            this.dialogVisible = false;
+            this.$message.success("添加题目成功");
+          }
         } else {
           console.log("error submit!!");
           return false;

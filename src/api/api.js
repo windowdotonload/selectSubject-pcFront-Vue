@@ -18,5 +18,6 @@ export default {
     deleteStudent: (params) => post('/deleteStudent', params),
     deleteTeacher: (params) => post('/deleteTeacher', params),
     editRecord: (params) => post('/editRecord', params),
-    addTitleInfo: (params) => post('/addTitleInfo', params)
+    addTitleInfo: (params) => post('/addTitleInfo', params),
+    showTitle: (params) => get('/showTitle', params)
 }   
