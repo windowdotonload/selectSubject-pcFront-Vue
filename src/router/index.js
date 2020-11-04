@@ -44,11 +44,24 @@ const admin = [
   },
 ]
 
-const student = [
-
+const teacher = [
+  {
+    path: "/addtitle", name: 'addtitle',
+    component: () => import('@/views/teacher/views/addtitle'),
+    meta: {
+      desc: "设计选题"
+    }
+  },
+  {
+    path: "/audit", name: 'audit',
+    component: () => import('@/views/teacher/views/audit'),
+    meta: {
+      desc: "申请审核"
+    }
+  },
 ]
 
-const teacher = [
+const student = [
 
 ]
 
@@ -65,8 +78,15 @@ const routes = [
       ...admin
     ]
   },
+  {
+    path: '/teacher', name: 'teacher',
+    redirect: '/addtitle',
+    component: () => import('@/views/teacher/manage'),
+    children: [
+      ...teacher
+    ]
+  },
   { path: '/student', name: 'student', component: () => import('@/views/student/manage') },
-  { path: '/teacher', name: 'teacher', component: () => import('@/views/teacher/manage') },
 ]
 
 const router = new VueRouter({
