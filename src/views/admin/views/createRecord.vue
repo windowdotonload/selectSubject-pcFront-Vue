@@ -128,7 +128,7 @@
     >
       <el-form
         :rules="editRules"
-        ref="recordForm"
+        ref="editRecordForm"
         :model="editRecordForm"
         label-width="100px"
       >
@@ -264,11 +264,25 @@ export default {
   },
   methods: {
     editDialogClose() {},
-    submiEditRecord() {
-      this.editDialogVisible = false;
-    },
     editRow(row) {
+      this.editRecordForm.id = row.id;
       this.editDialogVisible = true;
+    },
+    submiEditRecord() {
+      this.$refs.editRecordForm.validate(async (valid) => {
+        if (valid) {
+          // console.log(this.editRecordForm);
+          let res = await this.$api.editRecord(this.editRecordForm);
+          if (res.msg === "success") {
+            this.refreshTable();
+            this.$message.success("更新记录信息成功");
+            this.editDialogVisible = false;
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     // 删除记录数据，同时也要删除与记录有关联的学生和老师的数据
     deleteRow(row) {
