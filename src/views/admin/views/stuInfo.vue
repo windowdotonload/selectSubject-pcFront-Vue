@@ -48,7 +48,11 @@
         <el-table-column prop="political_status" label="政治面貌">
         </el-table-column>
         <el-table-column prop="ethnic_groups" label="民族"> </el-table-column>
-        <el-table-column prop="select_teacher" label="所选老师">
+        <el-table-column
+          show-overflow-tooltip
+          prop="select_teacher"
+          label="所选老师"
+        >
         </el-table-column>
         <el-table-column prop="select_subject" label="所选课题">
         </el-table-column>
@@ -104,6 +108,7 @@
       title="编辑学生信息"
       :visible.sync="editDialogVisible"
       width="30%"
+      @close="editDialogClose"
     >
       <el-form
         :model="editStudentForm"
@@ -143,7 +148,9 @@ export default {
   },
   data() {
     const validateLength = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value == "") {
+        callback();
+      } else if (value.length < 6) {
         callback(new Error("输入密码长度不小于六位"));
       } else {
         callback();
@@ -154,6 +161,7 @@ export default {
       tableData: [],
       loading: false,
       pageParams: {
+        recordid: 0,
         pagesize: 5,
         pagenumber: 1,
         recordid: 0,
@@ -161,30 +169,63 @@ export default {
       count: 0,
       editDialogVisible: false,
       editStudentForm: {
+        id: 0,
         password: "",
         select_teacher: "",
       },
       rules: {
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { validator: validateLength, trigger: "blur" },
-        ],
-        select_teacher: [
-          { required: true, message: "请输入教师姓名", trigger: "blur" },
-        ],
+        password: [{ validator: validateLength, trigger: "blur" }],
+        select_teacher: [],
       },
     };
   },
   methods: {
+    editDialogClose() {
+      this.$refs.editStudentForm.resetFields();
+    },
     editStudent(row) {
       // console.log(row);
+      this.editStudentForm.id = row.id;
       this.editDialogVisible = true;
     },
     submitEditStudent() {
-      this.editDialogVisible = false;
+      this.$refs.editStudentForm.validate(async (valid) => {
+        if (valid) {
+          let res = await this.$api.submitEditStudent(this.editStudentForm);
+          if (res.msg === "success") {
+            this.showStuData();
+            this.$message.success("更新学生信息成功");
+            this.editDialogVisible = false;
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     deleteStudent(row) {
-      console.log(row);
+      // console.log(row);
+      this.$confirm("确定删除此学生数据?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await this.$api.deleteStudent({ id: row.id });
+          if (res.msg === "success") {
+            this.showStuData();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     handleSizeChange(val) {
       this.pageParams.pagesize = val;
@@ -192,7 +233,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.pageParams.pagenumber = val;
-      this.showStuData;
+      this.showStuData();
     },
     async showStuData() {
       let res = await this.$api.showStudent(this.pageParams);

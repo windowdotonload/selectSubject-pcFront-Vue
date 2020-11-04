@@ -17,7 +17,7 @@
         <el-table-column prop="tecentqnumber" label="QQ"> </el-table-column>
         <el-table-column prop="professional" label="教师职称">
         </el-table-column>
-        <el-table-column>
+        <el-table-column label="操作" align="center">
           <template v-slot:default="{ row }">
             <el-button
               type="success"
@@ -25,6 +25,13 @@
               circle
               size="mini"
               @click="editTeacher(row)"
+            ></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              size="mini"
+              @click="deleteTeacher(row)"
             ></el-button>
           </template>
         </el-table-column>
@@ -129,7 +136,7 @@
     >
       <span slot="footer" class="dialog-footer">
         <el-form
-          :rules="rules"
+          :rules="editRules"
           ref="teacherEditForm"
           :model="editForm"
           label-width="100px"
@@ -220,6 +227,24 @@ export default {
         callback();
       }
     };
+    const editValidateLength = (rule, value, callback) => {
+      if (value == "") {
+        callback();
+      } else if (value.length < 6) {
+        callback(new Error("输入密码长度不小于六位"));
+      } else {
+        callback();
+      }
+    };
+    const editCheckPhoneNumber = (rule, value, callback) => {
+      if (value == "") {
+        callback();
+      } else if (!/^1[3456789]\d{9}$/.test(value)) {
+        return callback(new Error("请输入正确的手机号"));
+      } else {
+        callback();
+      }
+    };
     return {
       tableData: [],
       pageParams: {
@@ -254,6 +279,14 @@ export default {
         professional: [
           { required: true, message: "请输入教师职称", trigger: "blur" },
         ],
+      },
+      editRules: {
+        username: [],
+        password: [{ validator: editValidateLength, trigger: "blur" }],
+        teachername: [],
+        specialized_subject: [],
+        phonenumber: [{ validator: editCheckPhoneNumber, trigger: "blur" }],
+        professional: [],
       },
       teacherForm: {
         username: "",
@@ -344,9 +377,34 @@ export default {
         }
       });
     },
+    // 删除老师信息
+    deleteTeacher(row) {
+      this.$confirm("是否确定删除该教师信息?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await this.$api.deleteTeacher({ id: row.id });
+          if (res.msg === "success") {
+            this.showTeacher();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     EditClose() {
       this.dialogEditVisible = false;
       this.editForm.phonenumber = "";
+      this.editFrom.tecentqnumber = "";
       this.$refs.teacherEditForm.resetFields();
     },
   },

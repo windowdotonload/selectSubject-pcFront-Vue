@@ -76,16 +76,17 @@
                       {{ item.meta.desc }}
                     </span>
                   </template>
-                  <el-menu-item
-                    v-for="(item1, i) in item.children"
-                    :key="i"
-                    :index="item1.path"
-                    @click="state(item1.path)"
-                  >
-                    <span v-if="item1.meta" class="showDesc">
-                      {{ item1.meta.desc }}
-                    </span>
-                  </el-menu-item>
+                  <span v-for="(item1, i) in item.children" :key="i">
+                    <el-menu-item
+                      v-if="item1.meta"
+                      :index="item1.path"
+                      @click="state(item1.path)"
+                    >
+                      <span class="showDesc">
+                        {{ item1.meta.desc }}
+                      </span>
+                    </el-menu-item>
+                  </span>
                 </el-submenu>
               </div>
             </el-menu>

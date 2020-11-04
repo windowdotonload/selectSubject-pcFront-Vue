@@ -17,15 +17,36 @@
         </el-table-column>
         <el-table-column prop="teachernumber" label="教师人数">
         </el-table-column>
-        <el-table-column>
+        <el-table-column label="操作" align="center">
           <template v-slot="{ row }">
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              circle
-              size="mini"
-              @click.stop="deleteRow(row)"
-            ></el-button>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="编辑"
+              placement="top"
+            >
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                circle
+                size="mini"
+                @click.stop="deleteRow(row)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="删除"
+              placement="top"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                size="mini"
+                @click.stop="deleteRow(row)"
+              ></el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -42,7 +63,7 @@
       >
       </el-pagination>
     </div>
-
+    <!-- 添加记录信息对话框 -->
     <el-dialog
       @close="dialogClose"
       title="添加记录信息"
@@ -98,6 +119,19 @@
         </div>
       </span>
     </el-dialog>
+    <!-- 修改记录信息对话框 -->
+    <el-dialog
+      title="修改记录信息"
+      :visible.sync="editDialogVisible"
+      width="30%"
+      @close="editDialogClose"
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submiEditRecord">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -118,6 +152,7 @@ export default {
     return {
       tableData: [],
       dialogVisible: false,
+      editDialogVisible: false,
       exampleText: "例如：2020年毕业设计课程选题信息记录",
       recordForm: {
         recordname: "",
@@ -170,6 +205,10 @@ export default {
     this.refreshTable();
   },
   methods: {
+    editDialogClose() {},
+    submiEditRecord() {
+      this.editDialogVisible = false;
+    },
     // 删除记录数据，同时也要删除与记录有关联的学生和老师的数据
     deleteRow(row) {
       // console.log(row);

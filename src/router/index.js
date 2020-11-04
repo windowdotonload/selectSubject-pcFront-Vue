@@ -21,13 +21,13 @@ const admin = [
       desc: '人员信息'
     },
     children: [
-      {
-        path: '/adminStu', name: 'adminStu',
-        component: () => import('@/views/admin/views/Student'),
-        meta: {
-          desc: '学生面板'
-        },
-      },
+      // {
+      //   path: '/adminStu', name: 'adminStu',
+      //   component: () => import('@/views/admin/views/Student'),
+      //   meta: {
+      //     desc: '学生面板'
+      //   },
+      // },
       {
         path: '/adminTec', name: 'adminTec',
         component: () => import('@/views/admin/views/Teacher'),
