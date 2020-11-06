@@ -16,13 +16,14 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <template>
+        <template v-slot="{ row }">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
             <el-button
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              @click="editTitle(row)"
             ></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
@@ -31,12 +32,13 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              @click="deleteTitle(row)"
             ></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-
+    <!-- 添加题目信息 -->
     <el-dialog
       @close="closeDialog"
       title="添加题目信息"
@@ -67,6 +69,32 @@
         </span>
       </div>
     </el-dialog>
+    <!-- 编辑题目信息 -->
+    <el-dialog
+      @close="closeEditDialog"
+      title="修改题目信息"
+      :visible.sync="editCloseDialog"
+      width="30%"
+    >
+      <el-form ref="editTitleFrom" :model="editTitleFrom" label-width="80px">
+        <el-form-item label="题目名称" prop="title_name">
+          <el-input v-model="editTitleFrom.title_name"></el-input>
+        </el-form-item>
+        <el-form-item label="题目描述" prop="title_description">
+          <el-input
+            v-model="editTitleFrom.title_description"
+            type="textarea"
+            rows="5"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div style="width: 100%; text-align: center">
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editCloseDialog = false">取 消</el-button>
+          <el-button type="primary" @click="submitEditTitle">确 定</el-button>
+        </span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -80,7 +108,12 @@ export default {
     return {
       tableData: [],
       dialogVisible: false,
+      editCloseDialog: false,
       addTitleFrom: {
+        title_name: "",
+        title_description: "",
+      },
+      editTitleFrom: {
         title_name: "",
         title_description: "",
       },
@@ -123,6 +156,27 @@ export default {
           return false;
         }
       });
+    },
+    editTitle(row) {
+      // console.log(row);
+      this.editTitleFrom.id = row.id;
+      this.editCloseDialog = true;
+    },
+    async submitEditTitle() {
+      // console.log(this.editTitleFrom);
+      let res = await this.$api.editTitle(this.editTitleFrom);
+      if (res.msg === "success") {
+        this.showTitle();
+        this.editCloseDialog = false;
+        this.$message.success("修改信息成功");
+      }
+    },
+    closeEditDialog() {
+      this.editTitleFrom.title_name = "";
+      this.editTitleFrom.title_description = "";
+    },
+    deleteTitle(row) {
+      console.log(row);
     },
   },
 };
