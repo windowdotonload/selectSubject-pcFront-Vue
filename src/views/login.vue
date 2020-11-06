@@ -69,6 +69,8 @@ export default {
           if (res.msg === "success") {
             window.sessionStorage.setItem("username", res.data.username);
             window.sessionStorage.setItem("token", res.token);
+            this.$store.commit("recordId", res.data.id);
+
             this.$message({
               message: "登录成功",
               type: "success",

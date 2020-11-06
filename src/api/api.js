@@ -20,5 +20,6 @@ export default {
     editRecord: (params) => post('/editRecord', params),
     addTitleInfo: (params) => post('/addTitleInfo', params),
     showTitle: (params) => get('/showTitle', params),
-    editTitle: (params) => post('/editTitle', params)
+    editTitle: (params) => post('/editTitle', params),
+    deleteTitle: (params) => post('/deleteTitle', params)
 }   

@@ -80,6 +80,7 @@
         <el-form-item label="题目名称" prop="title_name">
           <el-input v-model="editTitleFrom.title_name"></el-input>
         </el-form-item>
+
         <el-form-item label="题目描述" prop="title_description">
           <el-input
             v-model="editTitleFrom.title_description"
@@ -128,6 +129,8 @@ export default {
     };
   },
   created() {
+    // console.log(this.$store.state.id);
+    this.addTitleFrom.id = this.$store.state.id;
     this.showTitle();
   },
   methods: {
@@ -175,8 +178,13 @@ export default {
       this.editTitleFrom.title_name = "";
       this.editTitleFrom.title_description = "";
     },
-    deleteTitle(row) {
-      console.log(row);
+    async deleteTitle(row) {
+      // console.log(row);
+      let res = await this.$api.deleteTitle({ id: row.id });
+      if (res.msg === "success") {
+        this.showTitle();
+        this.$message.success("删除题目成功");
+      }
     },
   },
 };
