@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-button
+      v-if="status == 1"
       type="success"
       icon="el-icon-edit"
       size="mini"
@@ -20,7 +21,7 @@
       <el-table-column prop="professional" label="教师职称"> </el-table-column>
       <el-table-column prop="titlenumber" label="毕设题目数量" align="center">
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" v-if="status == 1">
         <template v-slot="{ row }">
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
             <el-button
@@ -85,7 +86,7 @@
 
 <script>
 export default {
-  props: ["id"],
+  props: ["id", "status"],
   data() {
     return {
       tableData: [],

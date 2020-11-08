@@ -1,13 +1,14 @@
 <template>
   <div class="continer">
     <div>
-      <el-alert title="" type="warning" effect="dark">
+      <el-alert title="" type="warning" effect="dark" v-if="status == 1">
         <p>
           请选择要导入的学生信息EXCEL表，表中需要包含的字段与下表保持一致
           初始用户名和密码均为学生的学号。
         </p>
       </el-alert>
       <el-upload
+        v-if="status == 1"
         style="margin: 10px 0"
         class="upload-demo"
         action="/receiveFile"
@@ -56,7 +57,7 @@
         </el-table-column>
         <el-table-column prop="select_subject" label="所选课题">
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" v-if="status == 1">
           <template v-slot="{ row }">
             <el-tooltip
               class="item"
@@ -140,7 +141,7 @@
 
 <script>
 export default {
-  props: ["id"],
+  props: ["id", "status"],
   created() {
     // console.log("stu id is  ", this.id);
     this.pageParams.recordid = this.id;

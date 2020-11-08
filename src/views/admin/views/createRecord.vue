@@ -26,6 +26,7 @@
               placement="top"
             >
               <el-button
+                v-if="row.status == 1"
                 type="primary"
                 icon="el-icon-edit"
                 circle
@@ -40,6 +41,7 @@
               placement="top"
             >
               <el-button
+                v-if="row.status == 1"
                 type="danger"
                 icon="el-icon-delete"
                 circle
@@ -47,6 +49,27 @@
                 @click.stop="deleteRow(row)"
               ></el-button>
             </el-tooltip>
+            <p v-if="row.status == 0" style="color: #95a5a6">此条记录已完结</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="完结" align="center">
+          <template v-slot="{ row }">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="完结此条记录"
+              placement="top"
+            >
+              <el-button
+                v-if="row.status == 1"
+                type="danger"
+                icon="el-icon-check"
+                circle
+                size="mini"
+                @click.stop="overRecord(row)"
+              ></el-button>
+            </el-tooltip>
+            <p v-if="row.status == 0" style="color: #95a5a6">此条记录已完结</p>
           </template>
         </el-table-column>
       </el-table>
@@ -265,6 +288,7 @@ export default {
   methods: {
     editDialogClose() {},
     editRow(row) {
+      console.log(row);
       this.editRecordForm.id = row.id;
       this.editDialogVisible = true;
     },
@@ -312,10 +336,36 @@ export default {
           });
         });
     },
+    // 完结一条记录
+    overRecord(row) {
+      // console.log(row);
+      this.$confirm(
+        "删除此条记录后无法再操作此条记录下的人员信息，是否确认删除?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(async () => {
+          let res = await this.$api.overRecord({ id: row.id });
+          this.refreshTable();
+          if (res.msg == "success") {
+            this.$message.success("已经完结此条记录");
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     // 创建记录后跳转到详细操作页，添加学生和老师的信息
     toDetail(row, column, event) {
       // console.log("rowData is ", row);
-      this.$router.push({ path: `recordDetail/${row.id}` });
+      this.$router.push({ path: `recordDetail/${row.id}/${row.status}` });
     },
     dialogClose() {
       this.dialogVisible = false;

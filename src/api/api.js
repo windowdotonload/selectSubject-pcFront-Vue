@@ -5,6 +5,7 @@ export default {
     addRecord: (params) => post('/addRecord', params),
     getRecord: (params) => get('/getRecord', params),
     deleteRecord: (params) => post('/deleteRecord', params),
+    overRecord: (params) => post("/overRecord", params),
     checkUploadStatus: (params) => get('/checkUploadStatus', params),
     showStudent: (params) => get('/showStudent', params),
     addRecordId: (params) => get('/addRecordId', params),

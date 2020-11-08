@@ -2,10 +2,10 @@
   <div>
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="学生管理" name="stu">
-        <stu :id="recordid"></stu>
+        <stu :id="recordid" :status="status"></stu>
       </el-tab-pane>
       <el-tab-pane label="老师管理" name="tea">
-        <tea :id="recordid"></tea>
+        <tea :id="recordid" :status="status"></tea>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -19,9 +19,10 @@ export default {
     stu,
     tea,
   },
-  props: ["id"],
+  props: ["id", "status"],
   created() {
     // console.log(this.id);
+    // console.log(this.status);
     this.recordid = this.id;
   },
   data() {
