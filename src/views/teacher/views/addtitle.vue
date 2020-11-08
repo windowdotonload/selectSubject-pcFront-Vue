@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-button icon="el-icon-plus" type="primary" @click="addTitle"
-      >添加题目</el-button
-    >
+    <el-button icon="el-icon-plus" type="primary" @click="addTitle">
+      添加题目
+    </el-button>
     <splitline></splitline>
     <el-table :data="tableData" style="width: 100%; margin-top: 10px">
       <el-table-column prop="title_name" label="题目名称"> </el-table-column>
@@ -52,8 +52,30 @@
         :rules="rules"
       >
         <el-form-item label="题目名称" prop="title_name">
-          <el-input v-model="addTitleFrom.title_name"></el-input>
+          <el-input
+            v-model="addTitleFrom.title_name"
+            @input="searchsimilar"
+          ></el-input>
         </el-form-item>
+
+        <el-card class="card" v-show="showcard">
+          <p style="font-weight: 700; font-size: 16px; margin-bottom: 10px">
+            已有如下类似的题目
+          </p>
+          <div
+            v-for="(item, i) in similarTitleName"
+            :key="i"
+            class="showSimilarTitle"
+          >
+            <p class="showSimilarItem" v-html="item.content">
+              <!-- {{ item.content }} -->
+            </p>
+            <p>
+              {{ item.uptime | dateFormat }}
+            </p>
+          </div>
+        </el-card>
+
         <el-form-item label="题目描述" prop="title_description">
           <el-input
             v-model="addTitleFrom.title_description"
@@ -118,6 +140,7 @@ export default {
         title_name: "",
         title_description: "",
       },
+      similarTitleName: [],
       rules: {
         title_name: [
           { required: true, message: "请输入题目名称", trigger: "blur" },
@@ -133,9 +156,15 @@ export default {
     this.addTitleFrom.id = this.$store.state.id;
     this.showTitle();
   },
+  computed: {
+    showcard() {
+      return !(this.similarTitleName.length == 0);
+    },
+  },
   methods: {
     closeDialog() {
       this.$refs.titleForm.resetFields();
+      this.similarTitleName = [];
     },
     addTitle() {
       this.dialogVisible = true;
@@ -143,6 +172,23 @@ export default {
     async showTitle() {
       let res = await this.$api.showTitle();
       this.tableData = res.data;
+    },
+    // 全文分词搜索是否已经有类似的题目了
+    async searchsimilar() {
+      // console.log(this.addTitleFrom.title_name);
+      this.similarTitleName = [];
+      let res = await this.$api.searchSimilarTitleName({
+        title: this.addTitleFrom.title_name,
+      });
+      // console.log(res.data.hits.hits);
+      let obj = {};
+      res.data.hits.hits.forEach((item) => {
+        obj.content = item.highlight.content[0];
+        obj.uptime = item._source.uptime;
+        this.similarTitleName.push(obj);
+      });
+      // console.log(this.similarTitleName);
+      // console.log(this.showcard);
     },
     submitTitle() {
       this.$refs.titleForm.validate(async (valid) => {
@@ -190,4 +236,21 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="scss" scoped>
+.card {
+  position: absolute;
+  width: 300px;
+  left: -350px;
+  transition: all 0.5s;
+}
+.showSimilarTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.showSimilarItem {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+</style>

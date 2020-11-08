@@ -22,5 +22,6 @@ export default {
     addTitleInfo: (params) => post('/addTitleInfo', params),
     showTitle: (params) => get('/showTitle', params),
     editTitle: (params) => post('/editTitle', params),
-    deleteTitle: (params) => post('/deleteTitle', params)
+    deleteTitle: (params) => post('/deleteTitle', params),
+    searchSimilarTitleName: (params) => get('/searchSimilarTitleName', params)
 }   
