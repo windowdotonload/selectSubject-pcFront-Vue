@@ -59,7 +59,7 @@
         </el-form-item>
 
         <el-card class="card" v-show="showcard">
-          <p style="font-weight: 700; font-size: 16px; margin-bottom: 10px">
+          <p style="font-weight: 700; font-size: 16px; margin-bottom: 20px">
             已有如下类似的题目
           </p>
           <div
@@ -181,8 +181,8 @@ export default {
         title: this.addTitleFrom.title_name,
       });
       // console.log(res.data.hits.hits);
-      let obj = {};
       res.data.hits.hits.forEach((item) => {
+        let obj = {};
         obj.content = item.highlight.content[0];
         obj.uptime = item._source.uptime;
         this.similarTitleName.push(obj);
