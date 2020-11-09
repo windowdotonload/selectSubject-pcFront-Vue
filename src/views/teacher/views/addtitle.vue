@@ -5,8 +5,13 @@
     </el-button>
     <splitline></splitline>
     <el-table :data="tableData" style="width: 100%; margin-top: 10px">
-      <el-table-column prop="title_name" label="题目名称"> </el-table-column>
-      <el-table-column prop="title_description" label="题目描述">
+      <el-table-column prop="title_name" label="题目名称" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        prop="title_description"
+        label="题目描述"
+        show-overflow-tooltip
+      >
       </el-table-column>
       <el-table-column label="选题状态" align="center">
         <template v-slot="{ row }">
@@ -23,7 +28,7 @@
               icon="el-icon-edit"
               circle
               size="mini"
-              @click="editTitle(row)"
+              @click.stop="editTitle(row)"
             ></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
@@ -32,7 +37,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
-              @click="deleteTitle(row)"
+              @click.stop="deleteTitle(row)"
             ></el-button>
           </el-tooltip>
         </template>
@@ -170,7 +175,7 @@ export default {
       this.dialogVisible = true;
     },
     async showTitle() {
-      let res = await this.$api.showTitle();
+      let res = await this.$api.showTitle({ id: this.$store.state.id });
       this.tableData = res.data;
     },
     // 全文分词搜索是否已经有类似的题目了
@@ -209,6 +214,8 @@ export default {
     editTitle(row) {
       // console.log(row);
       this.editTitleFrom.id = row.id;
+      this.editTitleFrom.title_name = row.title_name;
+      this.editTitleFrom.title_description = row.title_description;
       this.editCloseDialog = true;
     },
     async submitEditTitle() {
@@ -224,13 +231,26 @@ export default {
       this.editTitleFrom.title_name = "";
       this.editTitleFrom.title_description = "";
     },
-    async deleteTitle(row) {
+    deleteTitle(row) {
       // console.log(row);
-      let res = await this.$api.deleteTitle({ id: row.id });
-      if (res.msg === "success") {
-        this.showTitle();
-        this.$message.success("删除题目成功");
-      }
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await this.$api.deleteTitle({ id: row.id });
+          if (res.msg === "success") {
+            this.showTitle();
+            this.$message.success("删除题目成功");
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };
@@ -239,8 +259,8 @@ export default {
 <style lang="scss" scoped>
 .card {
   position: absolute;
-  width: 300px;
-  left: -350px;
+  width: 500px;
+  left: -520px;
   transition: all 0.5s;
 }
 .showSimilarTitle {
