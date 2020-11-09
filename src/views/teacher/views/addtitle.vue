@@ -4,14 +4,16 @@
       添加题目
     </el-button>
     <splitline></splitline>
-    <el-dialog
-      title="题目详细信息"
-      :visible.sync="titleDetailShow"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <span>这是题目详细信息</span>
+    <!-- 展示详细信息 -->
+    <el-dialog title="题目详细信息" :visible.sync="titleDetailShow" width="30%">
+      <p class="detailTitle">题目名称</p>
+      <p class="title">{{ showTitleDetailInfo.title_name }}</p>
+      <p class="detailTitle">题目描述</p>
+      <div class="contentcontienr">
+        <p class="content">{{ showTitleDetailInfo.title_description }}</p>
+      </div>
     </el-dialog>
+
     <el-table
       :data="tableData"
       style="width: 100%; margin-top: 10px"
@@ -158,6 +160,7 @@ export default {
         title_name: "",
         title_description: "",
       },
+      showTitleDetailInfo: {},
       similarTitleName: [],
       rules: {
         title_name: [
@@ -184,9 +187,11 @@ export default {
       this.$refs.titleForm.resetFields();
       this.similarTitleName = [];
     },
-    showTitleDetail() {
+    showTitleDetail(row) {
       // console.log("ok");
       this.titleDetailShow = true;
+      console.log(row);
+      this.showTitleDetailInfo = Object.assign({}, row);
     },
     addTitle() {
       this.dialogVisible = true;
@@ -289,5 +294,23 @@ export default {
   height: 30px;
   display: flex;
   align-items: center;
+}
+.detailTitle {
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.title {
+  font-size: 16px;
+  text-indent: 2em;
+}
+.contentcontienr {
+  margin-left: 2em;
+}
+.content {
+  font-size: 16px;
+  white-space: pre-wrap;
+  line-height: 150%;
 }
 </style>
