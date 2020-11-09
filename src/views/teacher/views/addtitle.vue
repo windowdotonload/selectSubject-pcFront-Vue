@@ -4,6 +4,14 @@
       添加题目
     </el-button>
     <splitline></splitline>
+    <el-dialog
+      title="题目详细信息"
+      :visible.sync="titleDetailShow"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>这是题目详细信息</span>
+    </el-dialog>
     <el-table
       :data="tableData"
       style="width: 100%; margin-top: 10px"
