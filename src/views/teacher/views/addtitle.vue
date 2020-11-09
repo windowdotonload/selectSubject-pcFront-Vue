@@ -4,7 +4,11 @@
       添加题目
     </el-button>
     <splitline></splitline>
-    <el-table :data="tableData" style="width: 100%; margin-top: 10px">
+    <el-table
+      :data="tableData"
+      style="width: 100%; margin-top: 10px"
+      @row-click="showTitleDetail"
+    >
       <el-table-column prop="title_name" label="题目名称" show-overflow-tooltip>
       </el-table-column>
       <el-table-column
@@ -136,6 +140,7 @@ export default {
     return {
       tableData: [],
       dialogVisible: false,
+      titleDetailShow: false,
       editCloseDialog: false,
       addTitleFrom: {
         title_name: "",
@@ -170,6 +175,10 @@ export default {
     closeDialog() {
       this.$refs.titleForm.resetFields();
       this.similarTitleName = [];
+    },
+    showTitleDetail() {
+      // console.log("ok");
+      this.titleDetailShow = true;
     },
     addTitle() {
       this.dialogVisible = true;
