@@ -62,7 +62,20 @@ const teacher = [
 ]
 
 const student = [
-
+  {
+    path: "/titlelist", name: 'titlelist',
+    component: () => import('@/views/student/views/titlelist'),
+    meta: {
+      desc: "题目列表"
+    }
+  },
+  {
+    path: "/titleapply", name: 'titleapply',
+    component: () => import('@/views/student/views/titleapply'),
+    meta: {
+      desc: "申请状态"
+    }
+  },
 ]
 
 
@@ -86,7 +99,13 @@ const routes = [
       ...teacher
     ]
   },
-  { path: '/student', name: 'student', component: () => import('@/views/student/manage') },
+  {
+    path: '/student', name: 'student',
+    component: () => import('@/views/student/manage'),
+    children: [
+      ...student
+    ]
+  },
 ]
 
 const router = new VueRouter({

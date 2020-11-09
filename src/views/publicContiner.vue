@@ -143,7 +143,7 @@ export default {
     },
     state(path) {
       // console.log("matched   ", this.$route.matched);
-      console.log(path);
+      // console.log(path);
       window.sessionStorage.setItem("active", path);
     },
     // 点击面包屑(span标签)刷新sessionstorage并跳转路由，暂时先取消使用
