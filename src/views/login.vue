@@ -63,14 +63,18 @@ export default {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           let res = await this.$api.login(this.loginForm);
-          // console.log("--------");
-          // console.log(res);
-          // console.log("--------");
+          console.log("--------");
+          console.log(res);
+          console.log("--------");
           if (res.msg === "success") {
             window.sessionStorage.setItem("username", res.data.username);
             window.sessionStorage.setItem("token", res.token);
+            // 记录用户的id
             this.$store.commit("recordId", res.data.id);
-
+            // 记录学生登录是的对应的年份记录信息
+            if (res.data.recordto) {
+              window.sessionStorage.setItem("recordid", res.data.recordto);
+            }
             this.$message({
               message: "登录成功",
               type: "success",

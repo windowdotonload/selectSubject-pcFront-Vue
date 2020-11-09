@@ -23,5 +23,9 @@ export default {
     showTitle: (params) => get('/showTitle', params),
     editTitle: (params) => post('/editTitle', params),
     deleteTitle: (params) => post('/deleteTitle', params),
-    searchSimilarTitleName: (params) => get('/searchSimilarTitleName', params)
+    searchSimilarTitleName: (params) => get('/searchSimilarTitleName', params),
+    showAllStudentCanSelectTeacher: (params) => get('/showAllStudentCanSelectTeacher', params),
+    showSelectTeacherTitle: (params) => get('/showSelectTeacherTitle', params),
+    saveTeacherId: (params) => post('/saveTeacherId', params),
+    createdShowSelectTeacherId: (params) => get('/createdShowSelectTeacherId', params)
 }   

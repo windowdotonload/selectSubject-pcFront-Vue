@@ -36,6 +36,7 @@ const admin = [
         },
       },
       {
+        // :id是这条记录的id，:status是这条记录的状态 0 为完结， 1 为未完结可操作
         path: '/recordDetail/:id/:status', name: 'recordDetail',
         props: true,
         component: () => import('@/views/admin/views/recordDetail'),
@@ -101,6 +102,7 @@ const routes = [
   },
   {
     path: '/student', name: 'student',
+    redirect: '/titlelist',
     component: () => import('@/views/student/manage'),
     children: [
       ...student
