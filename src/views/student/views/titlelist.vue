@@ -16,6 +16,27 @@
     >
       自定义选题
     </el-button>
+    <div style="float: right; display: flex; align-items: center">
+      <p style="font-family: 'Arial'; font-weight: 600">所选择的老师：</p>
+      <el-tag effect="plain" v-if="teachername"> {{ teachername }} </el-tag>
+      <el-tag effect="plain" v-else> 还未选择老师 </el-tag>
+      <el-tooltip
+        v-if="teachername"
+        class="item"
+        effect="dark"
+        content="确定选择老师"
+        placement="top"
+      >
+        <el-button
+          type="success"
+          icon="el-icon-check"
+          circle
+          size="mini"
+          style="margin-left: 10px; margin-right: 30px"
+          @click="confirmTeacher"
+        ></el-button>
+      </el-tooltip>
+    </div>
     <splitline></splitline>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="title_name" label="题目名称"> </el-table-column>
@@ -88,10 +109,36 @@ export default {
       recordid: window.sessionStorage.getItem("recordid"),
       studentid: window.sessionStorage.getItem("id"),
       selectTeacherId: 0,
+      teachername: "",
     };
   },
-  created() {},
+  created() {
+    this.createdShowSelectTeacherId();
+    this.stuGetSelectTeacherName();
+    this.getStuInfo();
+  },
   methods: {
+    async getStuInfo() {
+      this.$api.getStuInfo({ id: window.sessionStorage.getItem("id") });
+    },
+    confirmTeacher() {
+      this.$confirm("确定选择老师后将不可更改，是否确认选择?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await this.$api.confirmSelectTeacher({
+            id: this.studentid,
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     async studentSelectTeacher() {
       let res = await this.$api.showAllStudentCanSelectTeacher({
         recordid: this.recordid,
@@ -100,6 +147,10 @@ export default {
         this.studentSelectTeacherTableData = res.data;
         this.selectDialogVisible = true;
       }
+    },
+    async stuGetSelectTeacherName() {
+      let res = await this.$api.stuGetSelectTeacherName({ id: this.studentid });
+      this.teachername = res.data.teachername;
     },
     studentCustomTitle() {
       this.customDialogVisible = true;
@@ -129,7 +180,10 @@ export default {
       }
     },
     async createdShowSelectTeacherId() {
-      let res = await this.$api.createdShowSelectTeacherId({ id: studentid });
+      let res = await this.$api.createdShowSelectTeacherId({
+        id: this.studentid,
+      });
+      this.tableData = res.data;
     },
     async showSelectTeacherTitle(params) {
       let res = await this.$api.showSelectTeacherTitle({
@@ -144,6 +198,7 @@ export default {
       // this.selectDialogVisible = false;
       this.saveTeacherId();
       this.showSelectTeacherTitle(this.selectTeacherId);
+      this.stuGetSelectTeacherName();
     },
     submitCustomTitle() {
       this.customDialogVisible = false;
