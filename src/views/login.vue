@@ -63,9 +63,9 @@ export default {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           let res = await this.$api.login(this.loginForm);
-          console.log("--------");
-          console.log(res);
-          console.log("--------");
+          // console.log("--------");
+          // console.log(res);
+          // console.log("--------");
           if (res.msg === "success") {
             window.sessionStorage.setItem("username", res.data.username);
             window.sessionStorage.setItem("token", res.token);

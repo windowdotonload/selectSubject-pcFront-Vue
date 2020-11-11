@@ -5,6 +5,7 @@
       type="success"
       size="mini"
       icon="el-icon-plus"
+      v-if="canselect != 1"
     >
       选择老师
     </el-button>
@@ -21,7 +22,7 @@
       <el-tag effect="plain" v-if="teachername"> {{ teachername }} </el-tag>
       <el-tag effect="plain" v-else> 还未选择老师 </el-tag>
       <el-tooltip
-        v-if="teachername"
+        v-if="teachername && canselect != 1"
         class="item"
         effect="dark"
         content="确定选择老师"
@@ -110,6 +111,7 @@ export default {
       studentid: window.sessionStorage.getItem("id"),
       selectTeacherId: 0,
       teachername: "",
+      canselect: 0,
     };
   },
   created() {
@@ -119,7 +121,10 @@ export default {
   },
   methods: {
     async getStuInfo() {
-      this.$api.getStuInfo({ id: window.sessionStorage.getItem("id") });
+      let res = await this.$api.getStuInfo({
+        id: window.sessionStorage.getItem("id"),
+      });
+      this.canselect = res.data.canselect;
     },
     confirmTeacher() {
       this.$confirm("确定选择老师后将不可更改，是否确认选择?", "提示", {
@@ -140,6 +145,7 @@ export default {
         });
     },
     async studentSelectTeacher() {
+      // console.log(this.recordid);
       let res = await this.$api.showAllStudentCanSelectTeacher({
         recordid: this.recordid,
       });
@@ -150,7 +156,11 @@ export default {
     },
     async stuGetSelectTeacherName() {
       let res = await this.$api.stuGetSelectTeacherName({ id: this.studentid });
-      this.teachername = res.data.teachername;
+      if (res.msg == "success") {
+        this.teachername = res.data.teachername;
+      } else {
+        this.teachername = undefined;
+      }
     },
     studentCustomTitle() {
       this.customDialogVisible = true;
