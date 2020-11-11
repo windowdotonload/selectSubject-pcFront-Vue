@@ -71,6 +71,13 @@ const student = [
     }
   },
   {
+    path: "/changetitle", name: 'changetitle',
+    component: () => import('@/views/student/views/changetitle'),
+    meta: {
+      desc: "更换选题"
+    }
+  },
+  {
     path: "/titleapply", name: 'titleapply',
     component: () => import('@/views/student/views/titleapply'),
     meta: {
@@ -82,6 +89,7 @@ const student = [
 
 
 const routes = [
+  // { path: "*", component: () => import('@/views/login') },
   { path: '/', redirect: '/login' },
   { path: '/login', component: () => import('@/views/login') },
   {
@@ -111,6 +119,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  // mode: 'history',
   routes
 })
 
