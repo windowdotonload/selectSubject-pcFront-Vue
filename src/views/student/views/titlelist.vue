@@ -43,6 +43,22 @@
       <el-table-column prop="title_name" label="题目名称"> </el-table-column>
       <el-table-column prop="title_description" label="题目描述">
       </el-table-column>
+      <el-table-column label="选题状态" align="center">
+        <template v-slot="{ row }">
+          <el-tag v-if="row.status == 0">待选择</el-tag>
+          <el-tag type="success" v-if="row.status == 1">选择中</el-tag>
+          <el-tag type="info" v-if="row.status == 2">已被选</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="" label="操作">
+        <el-button
+          type="success"
+          icon="el-icon-check"
+          circle
+          size="mini"
+        ></el-button>
+      </el-table-column>
     </el-table>
     <!-- 题目详情对话框 -->
     <el-dialog title="题目详细信息" :visible.sync="titleDetailShow" width="30%">
