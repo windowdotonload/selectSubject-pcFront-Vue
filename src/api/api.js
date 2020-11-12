@@ -30,5 +30,7 @@ export default {
     createdShowSelectTeacherId: (params) => get('/createdShowSelectTeacherId', params),
     stuGetSelectTeacherName: (params) => get("/stuGetSelectTeacherName", params),
     confirmSelectTeacher: (params) => post('/confirmSelectTeacher', params),
-    getStuInfo: (params) => get('/getStuInfo', params)
+    getStuInfo: (params) => get('/getStuInfo', params),
+    confirmStudentSelTitle: (params) => post('/confirmStudentSelTitle', params),
+    getStudentSelTitleInfo: (params) => get('/getStudentSelTitleInfo', params)
 }   

@@ -14,10 +14,18 @@
       type="warning"
       size="mini"
       icon="el-icon-edit"
+      v-if="stuinfo.select_title_status == 0"
     >
       自定义选题
     </el-button>
-    <div style="float: right; display: flex; align-items: center">
+    <div
+      style="
+        float: right;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      "
+    >
       <p style="font-family: 'Arial'; font-weight: 600">所选择的老师：</p>
       <el-tag effect="plain" v-if="teachername"> {{ teachername }} </el-tag>
       <el-tag effect="plain" v-else> 还未选择老师 </el-tag>
@@ -39,27 +47,90 @@
       </el-tooltip>
     </div>
     <splitline></splitline>
-    <el-table :data="tableData" style="width: 100%" @row-click="titleDetail">
-      <el-table-column prop="title_name" label="题目名称"> </el-table-column>
-      <el-table-column prop="title_description" label="题目描述">
-      </el-table-column>
-      <el-table-column label="选题状态" align="center">
-        <template v-slot="{ row }">
-          <el-tag v-if="row.status == 0">待选择</el-tag>
-          <el-tag type="success" v-if="row.status == 1">选择中</el-tag>
-          <el-tag type="info" v-if="row.status == 2">已被选</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column prop="" label="操作">
-        <el-button
-          type="success"
-          icon="el-icon-check"
-          circle
-          size="mini"
-        ></el-button>
-      </el-table-column>
-    </el-table>
+    <el-steps
+      style="margin-top: 30px; margin-bottom: 20px; margin-left: -60px"
+      :active="selectTitleActive"
+      finish-status="success"
+      align-center
+    >
+      <el-step title="选择题目"></el-step>
+      <el-step title="待审核"></el-step>
+      <el-step title="审核通过"></el-step>
+    </el-steps>
+    <transition>
+      <el-table
+        v-show="selectTitleActive == 0"
+        :data="tableData"
+        style="width: 100%"
+        @row-click="titleDetail"
+      >
+        <el-table-column prop="title_name" label="题目名称"> </el-table-column>
+        <el-table-column prop="title_description" label="题目描述">
+        </el-table-column>
+        <el-table-column label="选题状态" align="center">
+          <template v-slot="{ row }">
+            <el-tag v-if="row.status == 0">待选择</el-tag>
+            <el-tag type="success" v-if="row.status == 1">选择中</el-tag>
+            <el-tag type="info" v-if="row.status == 2">已被选</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="" label="操作">
+          <template v-slot="{ row }">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="确认选择题目"
+              placement="top"
+            >
+              <el-button
+                type="success"
+                icon="el-icon-check"
+                circle
+                size="mini"
+                @click.stop="selectTitle(row)"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+    </transition>
+    <transition>
+      <el-card v-show="selectTitleActive == 1">
+        <el-row class="rowformat">
+          <el-col :span="12">
+            <el-row style="display: flex; align-items: center">
+              <el-col :span="4">选题状态：</el-col>
+              <el-col :span="20">
+                <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
+                <el-tag type="success" v-if="stuinfo.select_title_status == 2"
+                  >审核通过</el-tag
+                >
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row class="rowformat">
+          <el-col :span="12">
+            <el-row style="display: flex; align-items: center">
+              <el-col :span="4">题目信息：</el-col>
+              <el-col :span="20">
+                <p v-html="stuinfo.select_subject"></p>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row class="rowformat">
+          <el-col :span="12">
+            <el-row style="display: flex; align-items: center">
+              <el-col :span="4">题目描述：</el-col>
+              <el-col :span="20">
+                <p v-html="titleinfo.title_description"></p>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </el-card>
+    </transition>
     <!-- 题目详情对话框 -->
     <el-dialog title="题目详细信息" :visible.sync="titleDetailShow" width="30%">
       <p class="detailTitle">题目名称</p>
@@ -127,6 +198,7 @@ export default {
   data() {
     return {
       tableData: [],
+      stuinfo: {},
       selectDialogVisible: false,
       customDialogVisible: false,
       studentSelectTeacherTableData: [],
@@ -138,19 +210,59 @@ export default {
       canselect: 0,
       showTitleDetailInfo: {},
       titleDetailShow: false,
+      selectTitleActive: 0,
+      titleinfo: {},
     };
   },
   created() {
     this.createdShowSelectTeacherId();
     this.stuGetSelectTeacherName();
     this.getStuInfo();
+    this.getStudentSelTitleInfo();
   },
   methods: {
+    async selectTitle(row) {
+      // console.log(row);
+      if (this.stuinfo.canselect != 1) {
+        this.$message.info("请先确认选择老师");
+        return;
+      }
+      this.$confirm("确定选择此选题?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          // console.log(row);
+
+          let res = await this.$api.confirmStudentSelTitle({
+            stuid: this.studentid,
+            titleid: row.id,
+            titlename: row.title_name,
+          });
+          this.getStuInfo();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    // 获取学生选择的题目的信息
+    async getStudentSelTitleInfo() {
+      let res = await this.$api.getStudentSelTitleInfo({
+        id: window.sessionStorage.getItem("id"),
+      });
+      this.titleinfo = res.data;
+    },
     async getStuInfo() {
       let res = await this.$api.getStuInfo({
         id: window.sessionStorage.getItem("id"),
       });
+      this.stuinfo = res.data;
       this.canselect = res.data.canselect;
+      this.selectTitleActive = Number(res.data.select_title_status);
     },
     confirmTeacher() {
       this.$confirm("确定选择老师后将不可更改，是否确认选择?", "提示", {
@@ -162,6 +274,7 @@ export default {
           let res = await this.$api.confirmSelectTeacher({
             id: this.studentid,
           });
+          this.getStuInfo();
         })
         .catch(() => {
           this.$message({
@@ -250,6 +363,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.5s ease;
+  position: absolute;
+}
+.v-move {
+  transition: all 0.5s ease;
+}
 .detailTitle {
   font-weight: 700;
   font-size: 18px;
@@ -267,5 +392,8 @@ export default {
   font-size: 16px;
   white-space: pre-wrap;
   line-height: 150%;
+}
+.rowformat {
+  margin-top: 10px;
 }
 </style>
