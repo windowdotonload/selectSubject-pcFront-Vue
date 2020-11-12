@@ -14,7 +14,7 @@
       type="warning"
       size="mini"
       icon="el-icon-edit"
-      v-if="stuinfo.select_title_status == 0"
+      v-if="stuinfo.select_title_status == 0 || !stuinfo.select_title_status"
     >
       自定义选题
     </el-button>
@@ -59,15 +59,16 @@
     </el-steps>
     <transition>
       <el-table
-        v-show="selectTitleActive == 0"
+        fit
+        v-if="selectTitleActive == 0"
         :data="tableData"
-        style="width: 100%"
         @row-click="titleDetail"
       >
-        <el-table-column prop="title_name" label="题目名称"> </el-table-column>
-        <el-table-column prop="title_description" label="题目描述">
+        <el-table-column prop="title_name" label="题目名称" width="350">
         </el-table-column>
-        <el-table-column label="选题状态" align="center">
+        <el-table-column prop="title_description" label="题目描述" width="550">
+        </el-table-column>
+        <el-table-column label="选题状态" align="center" width="250">
           <template v-slot="{ row }">
             <el-tag v-if="row.status == 0">待选择</el-tag>
             <el-tag type="success" v-if="row.status == 1">选择中</el-tag>
@@ -77,6 +78,7 @@
         <el-table-column prop="" label="操作">
           <template v-slot="{ row }">
             <el-tooltip
+              v-if="row.status == 0"
               class="item"
               effect="dark"
               content="确认选择题目"
@@ -90,47 +92,55 @@
                 @click.stop="selectTitle(row)"
               ></el-button>
             </el-tooltip>
+            <el-button
+              v-else
+              type="success"
+              icon="el-icon-check"
+              circle
+              size="mini"
+              disabled
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
     </transition>
-    <transition>
-      <el-card v-show="selectTitleActive == 1">
-        <el-row class="rowformat">
-          <el-col :span="12">
-            <el-row style="display: flex; align-items: center">
-              <el-col :span="4">选题状态：</el-col>
-              <el-col :span="20">
-                <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
-                <el-tag type="success" v-if="stuinfo.select_title_status == 2"
-                  >审核通过</el-tag
-                >
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row class="rowformat">
-          <el-col :span="12">
-            <el-row style="display: flex; align-items: center">
-              <el-col :span="4">题目信息：</el-col>
-              <el-col :span="20">
-                <p v-html="stuinfo.select_subject"></p>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row class="rowformat">
-          <el-col :span="12">
-            <el-row style="display: flex; align-items: center">
-              <el-col :span="4">题目描述：</el-col>
-              <el-col :span="20">
-                <p v-html="titleinfo.title_description"></p>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-card>
-    </transition>
+
+    <el-card v-if="selectTitleActive == 1">
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">选题状态：</el-col>
+            <el-col :span="20">
+              <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
+              <el-tag type="success" v-if="stuinfo.select_title_status == 2"
+                >审核通过</el-tag
+              >
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目信息：</el-col>
+            <el-col :span="20">
+              <p v-html="stuinfo.select_subject"></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目描述：</el-col>
+            <el-col :span="20">
+              <p v-html="titleinfo.title_description"></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-card>
+
     <!-- 题目详情对话框 -->
     <el-dialog title="题目详细信息" :visible.sync="titleDetailShow" width="30%">
       <p class="detailTitle">题目名称</p>
@@ -171,17 +181,54 @@
 
     <!-- 自定义选题对话框 -->
     <el-dialog
-      title="自定义选题"
+      @close="closeDialog"
+      title="自定义选择"
       :visible.sync="customDialogVisible"
       width="30%"
     >
-      <span>这是一段信息</span>
-      <div style="width: 100%; text-align: center; margin-top: 10px">
+      <el-form
+        ref="customTitleForm"
+        :model="customTitleForm"
+        label-width="80px"
+        :rules="rules"
+      >
+        <el-form-item label="题目名称" prop="title_name">
+          <el-input
+            v-model="customTitleForm.title_name"
+            @input="searchsimilar"
+          ></el-input>
+        </el-form-item>
+
+        <el-card class="card" v-show="showcard">
+          <p style="font-weight: 700; font-size: 16px; margin-bottom: 20px">
+            已有如下类似的题目
+          </p>
+          <div
+            v-for="(item, i) in similarTitleName"
+            :key="i"
+            class="showSimilarTitle"
+          >
+            <p class="showSimilarItem" v-html="item.content">
+              <!-- {{ item.content }} -->
+            </p>
+            <p>
+              {{ item.uptime | dateFormat }}
+            </p>
+          </div>
+        </el-card>
+
+        <el-form-item label="题目描述" prop="title_description">
+          <el-input
+            v-model="customTitleForm.title_description"
+            type="textarea"
+            rows="5"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div style="width: 100%; text-align: center">
         <span slot="footer" class="dialog-footer">
           <el-button @click="customDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitCustomTitle">
-            确 定
-          </el-button>
+          <el-button type="primary" @click="submitCustomTitle">确 定</el-button>
         </span>
       </div>
     </el-dialog>
@@ -207,11 +254,24 @@ export default {
       studentid: window.sessionStorage.getItem("id"),
       selectTeacherId: 0,
       teachername: "",
-      canselect: 0,
+      canselect: 1,
       showTitleDetailInfo: {},
       titleDetailShow: false,
-      selectTitleActive: 0,
+      selectTitleActive: undefined,
       titleinfo: {},
+      customTitleForm: {
+        title_name: "",
+        title_description: "",
+      },
+      rules: {
+        title_name: [
+          { required: true, message: "请输入题目名称", trigger: "blur" },
+        ],
+        title_description: [
+          { required: true, message: "请输入题目描述", trigger: "blur" },
+        ],
+      },
+      similarTitleName: [],
     };
   },
   created() {
@@ -220,7 +280,29 @@ export default {
     this.getStuInfo();
     this.getStudentSelTitleInfo();
   },
+  computed: {
+    showcard() {
+      return !(this.similarTitleName.length == 0);
+    },
+  },
   methods: {
+    closeDialog() {
+      this.$refs.customTitleForm.resetFields();
+      this.similarTitleName = [];
+    },
+    async searchsimilar() {
+      this.similarTitleName = [];
+      let res = await this.$api.searchSimilarTitleName({
+        title: this.customTitleForm.title_name,
+      });
+      // console.log(res.data.hits.hits);
+      res.data.hits.hits.forEach((item) => {
+        let obj = {};
+        obj.content = item.highlight.content[0];
+        obj.uptime = item._source.uptime;
+        this.similarTitleName.push(obj);
+      });
+    },
     async selectTitle(row) {
       // console.log(row);
       if (this.stuinfo.canselect != 1) {
@@ -234,12 +316,16 @@ export default {
       })
         .then(async () => {
           // console.log(row);
-
           let res = await this.$api.confirmStudentSelTitle({
             stuid: this.studentid,
             titleid: row.id,
             titlename: row.title_name,
           });
+          let titleAfterChange = await this.$api.changeTitleStatus({
+            stuid: this.studentid,
+            titleid: row.id,
+          });
+          this.showSelectTeacherTitle();
           this.getStuInfo();
         })
         .catch(() => {
@@ -328,7 +414,7 @@ export default {
         window.sessionStorage.setItem("selectTeacherId", res.data.teacherid);
       }
     },
-    // 根据学生表中记录的老师的id查找到所选择的这个老师的题目
+    // 在created()中根据学生表中记录的老师的id查找到所选择的这个老师的题目
     async createdShowSelectTeacherId() {
       let res = await this.$api.createdShowSelectTeacherId({
         id: this.studentid,
@@ -351,7 +437,19 @@ export default {
       this.stuGetSelectTeacherName();
     },
     submitCustomTitle() {
-      this.customDialogVisible = false;
+      this.$refs.titleForm.validate(async (valid) => {
+        if (valid) {
+          // console.log(this.addTitleFrom)
+          this.customDialogVisible = false;
+
+          // if (res.msg === "success") {
+          //   this.$message.success("添加题目成功");
+          // }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     titleDetail(row) {
       // console.log(row);
@@ -395,5 +493,21 @@ export default {
 }
 .rowformat {
   margin-top: 10px;
+}
+.card {
+  position: absolute;
+  width: 500px;
+  left: -520px;
+  transition: all 0.5s;
+}
+.showSimilarTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.showSimilarItem {
+  height: 30px;
+  display: flex;
+  align-items: center;
 }
 </style>

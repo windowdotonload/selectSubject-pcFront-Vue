@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column label="选题状态" align="center">
         <template v-slot="{ row }">
-          <el-tag v-if="row.status == 0">待选</el-tag>
+          <el-tag v-if="row.status == 0">待选择</el-tag>
           <el-tag type="success" v-else-if="row.status == 1">选择中</el-tag>
           <el-tag type="info" v-else-if="row.status == 2">已被选</el-tag>
         </template>
@@ -38,6 +38,7 @@
         <template v-slot="{ row }">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
             <el-button
+              :disabled="row.status == 0 ? false : true"
               type="primary"
               icon="el-icon-edit"
               circle
@@ -47,6 +48,7 @@
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
             <el-button
+              :disabled="row.status == 0 ? false : true"
               type="danger"
               icon="el-icon-delete"
               circle
