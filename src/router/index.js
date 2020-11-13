@@ -67,7 +67,7 @@ const student = [
     path: "/titlelist", name: 'titlelist',
     component: () => import('@/views/student/views/titlelist'),
     meta: {
-      desc: "题目列表"
+      desc: "申请题目"
     }
   },
   {
@@ -77,13 +77,13 @@ const student = [
       desc: "更换选题"
     }
   },
-  {
-    path: "/titleapply", name: 'titleapply',
-    component: () => import('@/views/student/views/titleapply'),
-    meta: {
-      desc: "申请状态"
-    }
-  },
+  // {
+  //   path: "/titleapply", name: 'titleapply',
+  //   component: () => import('@/views/student/views/titleapply'),
+  //   meta: {
+  //     desc: "申请状态"
+  //   }
+  // },
 ]
 
 

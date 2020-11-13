@@ -105,7 +105,8 @@
       </el-table>
     </transition>
 
-    <el-card v-if="selectTitleActive == 1">
+    <!--学生选择完老师出的题目后显示的详情-->
+    <el-card v-if="selectTitleActive == 1 && stuinfo.ifcustom != 1">
       <el-row class="rowformat">
         <el-col :span="12">
           <el-row style="display: flex; align-items: center">
@@ -135,6 +136,43 @@
             <el-col :span="4">题目描述：</el-col>
             <el-col :span="20">
               <p v-html="titleinfo.title_description"></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-card>
+
+    <!--学生自定义选题提交后显示的详情 -->
+    <el-card v-if="selectTitleActive == 1 && stuinfo.ifcustom == 1">
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">选题状态：</el-col>
+            <el-col :span="20">
+              <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
+              <el-tag type="success" v-if="stuinfo.select_title_status == 2"
+                >审核通过</el-tag
+              >
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目信息：</el-col>
+            <el-col :span="20">
+              <p v-html="stuinfo.title_name"></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目描述：</el-col>
+            <el-col :span="20">
+              <p v-html="stuinfo.title_description"></p>
             </el-col>
           </el-row>
         </el-col>
@@ -245,7 +283,9 @@ export default {
   data() {
     return {
       tableData: [],
-      stuinfo: {},
+      stuinfo: {
+        select_title_status: 1,
+      },
       selectDialogVisible: false,
       customDialogVisible: false,
       studentSelectTeacherTableData: [],
@@ -388,6 +428,7 @@ export default {
       }
     },
     studentCustomTitle() {
+      this.customTitleForm.id = this.studentid;
       this.customDialogVisible = true;
     },
     handleSelectionChange(val) {
@@ -435,16 +476,23 @@ export default {
       this.saveTeacherId();
       this.showSelectTeacherTitle(this.selectTeacherId);
       this.stuGetSelectTeacherName();
+      this.getStuInfo();
     },
     submitCustomTitle() {
-      this.$refs.titleForm.validate(async (valid) => {
+      if (this.stuinfo.canselect != 1) {
+        this.$message.info("请先确认选择老师");
+        return;
+      }
+      this.$refs.customTitleForm.validate(async (valid) => {
         if (valid) {
-          // console.log(this.addTitleFrom)
-          this.customDialogVisible = false;
+          // console.log(this.customTitleForm);
+          let res = await this.$api.studentCustomTitle(this.customTitleForm);
 
-          // if (res.msg === "success") {
-          //   this.$message.success("添加题目成功");
-          // }
+          if (res.msg === "success") {
+            this.$message.success("申请自定义题目成功，等待老师审核");
+            this.getStuInfo();
+            this.customDialogVisible = false;
+          }
         } else {
           console.log("error submit!!");
           return false;

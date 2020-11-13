@@ -33,5 +33,6 @@ export default {
     getStuInfo: (params) => get('/getStuInfo', params),
     confirmStudentSelTitle: (params) => post('/confirmStudentSelTitle', params),
     getStudentSelTitleInfo: (params) => get('/getStudentSelTitleInfo', params),
-    changeTitleStatus: (params) => post('/changeTitleStatus', params)
+    changeTitleStatus: (params) => post('/changeTitleStatus', params),
+    studentCustomTitle: (params) => post("/studentCustomTitle", params)
 }   
