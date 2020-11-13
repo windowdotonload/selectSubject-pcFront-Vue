@@ -393,6 +393,7 @@ export default {
             titleid: row.id,
           });
           // this.showSelectTeacherTitle();
+          this.getStudentSelTitleInfo();
           this.getStuInfo();
         })
         .catch(() => {
