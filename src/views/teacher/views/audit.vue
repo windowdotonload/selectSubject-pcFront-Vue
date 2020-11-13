@@ -47,6 +47,7 @@
         <template v-slot="{ row }">
           <el-tooltip class="item" effect="dark" content="通过" placement="top">
             <el-button
+              :disabled="row.select_title_status != 1 ? true : false"
               type="success"
               icon="el-icon-check"
               circle
@@ -56,6 +57,7 @@
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="退回" placement="top">
             <el-button
+              :disabled="row.select_title_status != 1 ? true : false"
               type="danger"
               icon="el-icon-minus"
               circle
@@ -125,6 +127,13 @@ export default {
     },
     pass(row) {
       console.log(row);
+      let res = this.$api.passStudentSelTitle({
+        id: row.id,
+      });
+      if (res.msg == "success") {
+        this.teaGetSelectStuInfo();
+        this.$message.success("审核通过");
+      }
     },
     refuse(row) {
       console.log(row);
