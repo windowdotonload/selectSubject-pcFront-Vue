@@ -36,5 +36,6 @@ export default {
     changeTitleStatus: (params) => post('/changeTitleStatus', params),
     studentCustomTitle: (params) => post("/studentCustomTitle", params),
     teaGetSelectStuInfo: (params) => get('/teaGetSelectStuInfo', params),
-    passStudentSelTitle: (params) => post("/passStudentSelTitle", params)
+    passStudentSelTitle: (params) => post("/passStudentSelTitle", params),
+    refuseStudentSelTitle: (params) => post('/refuseStudentSelTitle', params)
 }   

@@ -14,7 +14,11 @@
       type="warning"
       size="mini"
       icon="el-icon-edit"
-      v-if="stuinfo.select_title_status == 0 || !stuinfo.select_title_status"
+      v-if="
+        stuinfo.select_title_status == 0 ||
+        !stuinfo.select_title_status ||
+        stuinfo.select_title_status == 4
+      "
     >
       自定义选题
     </el-button>
@@ -54,19 +58,116 @@
       align-center
     >
       <el-step title="选择题目"></el-step>
-      <el-step title="待审核"></el-step>
+      <el-step v-if="stuinfo.select_title_status != 4" title="待审核"></el-step>
+      <el-step
+        v-if="stuinfo.select_title_status == 4"
+        title="被退回，请重新申请"
+      ></el-step>
+
       <el-step title="审核通过"></el-step>
     </el-steps>
+
+    <!--学生选择完老师出的题目后显示的详情-->
+    <el-card
+      v-if="
+        (selectTitleActive == 1 || selectTitleActive == 3) &&
+        stuinfo.ifcustom != 1
+      "
+    >
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">选题状态：</el-col>
+            <el-col :span="20">
+              <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
+              <el-tag type="success" v-if="stuinfo.select_title_status == 2">
+                审核通过
+              </el-tag>
+              <el-tag v-if="stuinfo.select_title_status == 4" type="danger">
+                已退回,请重新申请
+              </el-tag>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目信息：</el-col>
+            <el-col :span="20">
+              <p v-html="stuinfo.select_subject"></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目描述：</el-col>
+            <el-col :span="20">
+              <p
+                v-html="titleinfo.title_description"
+                style="white-space: pre-wrap; line-height: 150%"
+              ></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-card>
+
+    <!--学生自定义选题提交后显示的详情 -->
+    <el-card v-if="selectTitleActive == 1 && stuinfo.ifcustom == 1">
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">选题状态：</el-col>
+            <el-col :span="20">
+              <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
+              <el-tag type="success" v-if="stuinfo.select_title_status == 2">
+                审核通过
+              </el-tag>
+              <el-tag type="danger" v-if="stuinfo.select_title_status == 4">
+                已退回，请重新申请
+              </el-tag>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目信息：</el-col>
+            <el-col :span="20">
+              <p v-html="stuinfo.title_name"></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="rowformat">
+        <el-col :span="12">
+          <el-row style="display: flex; align-items: center">
+            <el-col :span="4">题目描述：</el-col>
+            <el-col :span="20">
+              <p
+                v-html="stuinfo.title_description"
+                style="white-space: pre-wrap; line-height: 150%"
+              ></p>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-card>
+
     <transition>
       <el-table
-        fit
-        v-if="selectTitleActive == 0"
+        style="margin-top: 15px"
+        v-if="selectTitleActive == 0 || stuinfo.select_title_status == 4"
         :data="tableData"
         @row-click="titleDetail"
       >
         <el-table-column prop="title_name" label="题目名称" width="350">
         </el-table-column>
-        <el-table-column prop="title_description" label="题目描述" width="550">
+        <el-table-column prop="title_description" label="题目描述" width="539">
         </el-table-column>
         <el-table-column label="选题状态" align="center" width="250">
           <template v-slot="{ row }">
@@ -104,80 +205,6 @@
         </el-table-column>
       </el-table>
     </transition>
-
-    <!--学生选择完老师出的题目后显示的详情-->
-    <el-card v-if="selectTitleActive == 1 && stuinfo.ifcustom != 1">
-      <el-row class="rowformat">
-        <el-col :span="12">
-          <el-row style="display: flex; align-items: center">
-            <el-col :span="4">选题状态：</el-col>
-            <el-col :span="20">
-              <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
-              <el-tag type="success" v-if="stuinfo.select_title_status == 2"
-                >审核通过</el-tag
-              >
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row class="rowformat">
-        <el-col :span="12">
-          <el-row style="display: flex; align-items: center">
-            <el-col :span="4">题目信息：</el-col>
-            <el-col :span="20">
-              <p v-html="stuinfo.select_subject"></p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row class="rowformat">
-        <el-col :span="12">
-          <el-row style="display: flex; align-items: center">
-            <el-col :span="4">题目描述：</el-col>
-            <el-col :span="20">
-              <p v-html="titleinfo.title_description"></p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </el-card>
-
-    <!--学生自定义选题提交后显示的详情 -->
-    <el-card v-if="selectTitleActive == 1 && stuinfo.ifcustom == 1">
-      <el-row class="rowformat">
-        <el-col :span="12">
-          <el-row style="display: flex; align-items: center">
-            <el-col :span="4">选题状态：</el-col>
-            <el-col :span="20">
-              <el-tag v-if="stuinfo.select_title_status == 1">待审核</el-tag>
-              <el-tag type="success" v-if="stuinfo.select_title_status == 2"
-                >审核通过</el-tag
-              >
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row class="rowformat">
-        <el-col :span="12">
-          <el-row style="display: flex; align-items: center">
-            <el-col :span="4">题目信息：</el-col>
-            <el-col :span="20">
-              <p v-html="stuinfo.title_name"></p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row class="rowformat">
-        <el-col :span="12">
-          <el-row style="display: flex; align-items: center">
-            <el-col :span="4">题目描述：</el-col>
-            <el-col :span="20">
-              <p v-html="stuinfo.title_description"></p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </el-card>
 
     <!-- 题目详情对话框 -->
     <el-dialog title="题目详细信息" :visible.sync="titleDetailShow" width="30%">
@@ -365,7 +392,7 @@ export default {
             stuid: this.studentid,
             titleid: row.id,
           });
-          this.showSelectTeacherTitle();
+          // this.showSelectTeacherTitle();
           this.getStuInfo();
         })
         .catch(() => {
@@ -388,7 +415,21 @@ export default {
       });
       this.stuinfo = res.data;
       this.canselect = res.data.canselect;
-      this.selectTitleActive = Number(res.data.select_title_status);
+      switch (res.data.select_title_status) {
+        case null:
+          this.selectTitleActive = 0;
+        case 0:
+          this.selectTitleActive = 0;
+          break;
+        case 1:
+          this.selectTitleActive = 1;
+          break;
+        case 2:
+          this.selectTitleActive = 3;
+          break;
+        case 4:
+          this.selectTitleActive = 1;
+      }
     },
     confirmTeacher() {
       this.$confirm("确定选择老师后将不可更改，是否确认选择?", "提示", {

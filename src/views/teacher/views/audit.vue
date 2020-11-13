@@ -70,6 +70,17 @@
     </el-table>
     <!-- 展示题目详细信息 -->
     <el-dialog title="题目详细信息" :visible.sync="titleDetailShow" width="30%">
+      <p class="detailTitle">选题状态</p>
+      <div class="contentcontienr">
+        <el-tag v-if="rowStuInfo.select_title_status == 1"> 待审核</el-tag>
+        <el-tag v-if="rowStuInfo.select_title_status == 2" type="success">
+          已通过
+        </el-tag>
+        <el-tag v-if="rowStuInfo.select_title_status == 4" type="info">
+          已退回，待学生重新申请
+        </el-tag>
+      </div>
+
       <p class="detailTitle">题目名称</p>
       <p class="title">{{ showTitleDetailInfo.title_name }}</p>
       <p class="detailTitle">题目描述</p>
@@ -88,6 +99,7 @@ export default {
       id: window.sessionStorage.getItem("id"),
       titleDetailShow: false,
       showTitleDetailInfo: {},
+      rowStuInfo: {},
     };
   },
   created() {
@@ -103,6 +115,7 @@ export default {
 
     async showDetail(row) {
       // console.log(row);
+      this.rowStuInfo = row;
       let res = await this.$api.getStudentSelTitleInfo({
         id: row.id,
       });
@@ -126,17 +139,76 @@ export default {
       }
     },
     pass(row) {
-      console.log(row);
-      let res = this.$api.passStudentSelTitle({
-        id: row.id,
-      });
-      if (res.msg == "success") {
-        this.teaGetSelectStuInfo();
-        this.$message.success("审核通过");
-      }
+      // console.log(row);
+      // debugger;
+      this.$confirm("是否确认通过?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          if (row.ifcustom == 1) {
+            /**
+             * 学生自定义选题申请审核是，老师选择通过
+             * 首先将这条自定义题目加入到title表中，
+             * 然后再让这条题目被这条题目的申请学生选择，同时改变这条题目的状态为被选择
+             */
+            let addCustomTitleRes = await this.$api.addTitleInfo({
+              id: this.id,
+              title_name: row.title_name,
+              title_description: row.title_description,
+            });
+            // console.log(addCustomTitleRes);
+            let stuRes = await this.$api.confirmStudentSelTitle({
+              stuid: row.id,
+              titleid: addCustomTitleRes.data.id,
+              titlename: addCustomTitleRes.data.title_name,
+            });
+            let titleAfterChange = await this.$api.changeTitleStatus({
+              stuid: row.id,
+              titleid: addCustomTitleRes.data.id,
+            });
+          }
+          let res = await this.$api.passStudentSelTitle({
+            id: row.id,
+          });
+          // console.log(res);
+          if (res.msg == "success") {
+            // console.log(res);
+            this.teaGetSelectStuInfo();
+            this.$message.success("审核通过");
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     refuse(row) {
-      console.log(row);
+      // console.log(row);
+      this.$confirm("是否确认退回?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          // 老师将一个学生的选题退回，学生选题状态变为被退回，而题目的状态直接可以变为待选择
+          let res = await this.$api.refuseStudentSelTitle({
+            id: row.id,
+          });
+          if (res.msg == "success") {
+            this.teaGetSelectStuInfo();
+            this.$message.success("已退回");
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };
