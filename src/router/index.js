@@ -84,6 +84,13 @@ const student = [
       desc: "更换选题"
     }
   },
+  {
+    path: "/score", name: 'score',
+    component: () => import('@/views/student/views/score'),
+    meta: {
+      desc: "最终得分"
+    }
+  },
   // {
   //   path: "/titleapply", name: 'titleapply',
   //   component: () => import('@/views/student/views/titleapply'),

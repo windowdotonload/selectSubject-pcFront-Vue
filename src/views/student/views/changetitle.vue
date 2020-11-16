@@ -22,13 +22,22 @@
     <div
       class="warnEdit"
       v-if="
-        stuinfo.change_title_number == 1 && stuinfo.select_title_status != 0
+        stuinfo.change_title_number == 1 &&
+        stuinfo.select_title_status != 0 &&
+        !stuinfo.score
       "
     >
       <span>
         <img src="@/public/img/warn.png" alt="" />
       </span>
       <p class="warntext">以申请修改过选题，无法再次申请</p>
+    </div>
+
+    <div class="warnEdit" v-if="stuinfo.score">
+      <span>
+        <img src="@/public/img/warn.png" alt="" />
+      </span>
+      <p class="warntext">您的成绩已经评定</p>
     </div>
   </div>
 </template>
@@ -58,7 +67,8 @@ export default {
       // console.log(this.stuinfo.change_title_number);
       if (
         this.stuinfo.select_title_status != 0 &&
-        !this.stuinfo.change_title_number
+        !this.stuinfo.change_title_number &&
+        !this.stuinfo.score
       ) {
         this.$confirm(
           "一旦选择确定修改选题，之前的选题信息将被清空，是否确定修改?",
