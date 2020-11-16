@@ -1,3 +1,13 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+ */
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+ */
 import { get, post } from '@/api/globalRequest.js'
 
 export default {
@@ -37,5 +47,7 @@ export default {
     studentCustomTitle: (params) => post("/studentCustomTitle", params),
     teaGetSelectStuInfo: (params) => get('/teaGetSelectStuInfo', params),
     passStudentSelTitle: (params) => post("/passStudentSelTitle", params),
-    refuseStudentSelTitle: (params) => post('/refuseStudentSelTitle', params)
+    refuseStudentSelTitle: (params) => post('/refuseStudentSelTitle', params),
+    stuChangeTitle: (params) => post("/stuChangeTitle", params),
+    teacherSubmitScore: (params) => post('/teacherSubmitScore', params)
 }   

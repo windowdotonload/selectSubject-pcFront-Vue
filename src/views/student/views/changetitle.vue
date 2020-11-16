@@ -6,7 +6,7 @@
 -->
 
 <template>
-  <div class="continer">
+  <div>
     <div
       class="warnEdit"
       v-if="!stuinfo.select_title_status || stuinfo.select_title_status == 0"
@@ -14,7 +14,21 @@
       <span>
         <img src="@/public/img/warn.png" alt="" />
       </span>
-      <p class="warntext">还未选择题目，无法申请修改</p>
+      <p class="warntext">
+        还未选择题目,<a class="goApply" @click="goApply">去申请</a>
+      </p>
+    </div>
+
+    <div
+      class="warnEdit"
+      v-if="
+        stuinfo.change_title_number == 1 && stuinfo.select_title_status != 0
+      "
+    >
+      <span>
+        <img src="@/public/img/warn.png" alt="" />
+      </span>
+      <p class="warntext">以申请修改过选题，无法再次申请</p>
     </div>
   </div>
 </template>
@@ -35,6 +49,38 @@ export default {
         id: window.sessionStorage.getItem("id"),
       });
       this.stuinfo = res.data;
+      this.confirmChangeTitle();
+    },
+    async goApply() {
+      this.$router.push("/titlelist");
+    },
+    confirmChangeTitle() {
+      // console.log(this.stuinfo.change_title_number);
+      if (
+        this.stuinfo.select_title_status != 0 &&
+        !this.stuinfo.change_title_number
+      ) {
+        this.$confirm(
+          "一旦选择确定修改选题，之前的选题信息将被清空，是否确定修改?",
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          }
+        )
+          .then(async () => {
+            let res = await this.$api.stuChangeTitle({
+              id: this.stuinfo.id,
+            });
+            if (res.msg === "success") {
+              this.$router.push("/titlelist");
+            }
+          })
+          .catch(() => {
+            this.$router.push("/titlelist");
+          });
+      }
     },
   },
 };
@@ -57,5 +103,9 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: rgb(170, 170, 170);
+}
+.goApply {
+  cursor: pointer;
+  color: #3498db;
 }
 </style>

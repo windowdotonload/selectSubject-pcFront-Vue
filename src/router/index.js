@@ -60,6 +60,13 @@ const teacher = [
       desc: "申请审核"
     }
   },
+  {
+    path: "/grade", name: 'grade',
+    component: () => import('@/views/teacher/views/grade'),
+    meta: {
+      desc: "给定评级"
+    }
+  },
 ]
 
 const student = [
