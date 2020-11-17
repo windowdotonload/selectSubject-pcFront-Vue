@@ -87,6 +87,17 @@
       <div class="contentcontienr">
         <p class="content">{{ showTitleDetailInfo.title_description }}</p>
       </div>
+      <p class="detailTitle">申请历史</p>
+      <el-timeline>
+        <el-timeline-item
+          style="margin-left: 10px"
+          v-for="(activity, index) in applyhistory"
+          :key="index"
+          :timestamp="activity.createdAt | dateFormat"
+        >
+          <p class="content">{{ activity.content }}</p>
+        </el-timeline-item>
+      </el-timeline>
     </el-dialog>
   </div>
 </template>
@@ -100,6 +111,7 @@ export default {
       titleDetailShow: false,
       showTitleDetailInfo: {},
       rowStuInfo: {},
+      applyhistory: [],
     };
   },
   created() {
@@ -116,6 +128,12 @@ export default {
     async showDetail(row) {
       // console.log(row);
       this.rowStuInfo = row;
+      let applyres = await this.$api.teacherGetApplyHistory({
+        id: row.id,
+      });
+      if (applyres.msg == "success") {
+        this.applyhistory = applyres.data;
+      }
       let res = await this.$api.getStudentSelTitleInfo({
         id: row.id,
       });
@@ -182,7 +200,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消",
           });
         });
     },
@@ -197,6 +215,7 @@ export default {
           // 老师将一个学生的选题退回，学生选题状态变为被退回，而题目的状态直接可以变为待选择
           let res = await this.$api.refuseStudentSelTitle({
             id: row.id,
+            titlename: row.select_subject,
           });
           if (res.msg == "success") {
             this.teaGetSelectStuInfo();
@@ -206,7 +225,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消",
           });
         });
     },

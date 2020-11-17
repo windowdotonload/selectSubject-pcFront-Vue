@@ -116,7 +116,12 @@
     </el-card>
 
     <!--学生自定义选题提交后显示的详情 -->
-    <el-card v-if="selectTitleActive == 1 && stuinfo.ifcustom == 1">
+    <el-card
+      v-if="
+        (selectTitleActive == 1 || selectTitleActive == 3) &&
+        stuinfo.ifcustom == 1
+      "
+    >
       <el-row class="rowformat">
         <el-col :span="12">
           <el-row style="display: flex; align-items: center">
@@ -399,7 +404,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消选择",
           });
         });
     },
@@ -519,6 +524,7 @@ export default {
       this.showSelectTeacherTitle(this.selectTeacherId);
       this.stuGetSelectTeacherName();
       this.getStuInfo();
+      window.location.reload();
     },
     submitCustomTitle() {
       if (this.stuinfo.canselect != 1) {

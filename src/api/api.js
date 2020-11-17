@@ -49,5 +49,7 @@ export default {
     passStudentSelTitle: (params) => post("/passStudentSelTitle", params),
     refuseStudentSelTitle: (params) => post('/refuseStudentSelTitle', params),
     stuChangeTitle: (params) => post("/stuChangeTitle", params),
-    teacherSubmitScore: (params) => post('/teacherSubmitScore', params)
+    teacherSubmitScore: (params) => post('/teacherSubmitScore', params),
+    recordChangeTitle: (params) => post('/recordChangeTitle', params),
+    teacherGetApplyHistory: (params) => get("/teacherGetApplyHistory", params)
 }   

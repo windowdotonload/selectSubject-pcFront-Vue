@@ -58,6 +58,7 @@ export default {
         id: window.sessionStorage.getItem("id"),
       });
       this.stuinfo = res.data;
+      // console.log(this.stuinfo);
       this.confirmChangeTitle();
     },
     async goApply() {
@@ -80,6 +81,10 @@ export default {
           }
         )
           .then(async () => {
+            let recordRes = await this.$api.recordChangeTitle({
+              id: this.stuinfo.id,
+              titleid: this.stuinfo.titleid,
+            });
             let res = await this.$api.stuChangeTitle({
               id: this.stuinfo.id,
             });
