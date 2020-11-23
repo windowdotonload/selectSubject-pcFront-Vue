@@ -302,6 +302,54 @@
         </span>
       </div>
     </el-dialog>
+
+    <!-- 通信 -->
+    <div class="connection" @click="startConnect">
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="与老师联系"
+        placement="top"
+      >
+        <img src="../../../public/img/lianxi.png" alt="" />
+      </el-tooltip>
+    </div>
+    <!-- 通信对话框 -->
+    <el-dialog :visible.sync="connectionVisible" width="30%">
+      <div class="messageBox">
+        <div v-for="(item, i) in messagecontent" :key="i">
+          <p v-if="item.sender == 'tea'" style="width: 100%">
+            <el-card style="width: 69%; margin: 5px">123</el-card>
+          </p>
+          <p
+            v-if="item.sender == 'stu'"
+            style="width: 100%; display: flex; justify-content: flex-end"
+          >
+            <el-card style="width: 69%; margin: 5px">123</el-card>
+          </p>
+        </div>
+      </div>
+      <div>
+        <el-input
+          class="sendMessage"
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="sendmessageinfo"
+        >
+        </el-input>
+
+        <p style="width: 100%; text-align: right">
+          <el-button
+            size="mini"
+            style="margin-top: 10px"
+            @click="sendmessageto"
+          >
+            发送
+          </el-button>
+        </p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -312,12 +360,31 @@ export default {
   components: {
     splitline,
   },
+  // 配置socket通信
+  sockets: {
+    // socket.on 的注册事件放在这个对象中写，本身就含有connect等默认监听事件
+    connect: function (val) {
+      console.log("socket connected");
+    },
+    customEmit: function (data) {
+      console.log(
+        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
+      );
+    },
+    message(val) {
+      console.log("id", this.stuinfo.id);
+      console.log(val);
+      this.messagecontent.push(val);
+      console.log("this.message", this.messagecontent);
+    },
+  },
   data() {
     return {
       tableData: [],
       stuinfo: {
         select_title_status: 1,
       },
+      connectionVisible: false,
       selectDialogVisible: false,
       customDialogVisible: false,
       studentSelectTeacherTableData: [],
@@ -344,6 +411,8 @@ export default {
         ],
       },
       similarTitleName: [],
+      sendmessageinfo: "",
+      messagecontent: [],
     };
   },
   created() {
@@ -552,6 +621,22 @@ export default {
       this.titleDetailShow = true;
       this.showTitleDetailInfo = row;
     },
+    // 点击聊天按钮是调取之前的聊天记录，点击发送才是调用socket
+    startConnect() {
+      this.connectionVisible = true;
+    },
+    sendmessageto() {
+      if (this.sendmessageinfo == "") {
+        return;
+      }
+      this.$socket.emit("server", {
+        stuid: this.stuinfo.id,
+        teaid: this.stuinfo.teacherid,
+        msg: this.sendmessageinfo,
+        sender: "stu",
+      });
+      this.sendmessageinfo = "";
+    },
   },
 };
 </script>
@@ -605,5 +690,42 @@ export default {
   height: 30px;
   display: flex;
   align-items: center;
+}
+.connection {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  border-radius: 50%;
+  background: #55efc4;
+  text-align: center;
+  padding-top: 10px;
+  box-sizing: border-box;
+}
+.messageBox {
+  box-shadow: 5px 5px 5px #95a5a6;
+  height: 300px;
+  width: 100%;
+  border: 1px solid #95a5a6;
+  border-radius: 3px;
+  margin-top: 20px;
+  overflow-y: auto;
+}
+.messageBox::-webkit-scrollbar {
+  width: 5px;
+  background: rgba(243, 210, 178, 0.788);
+}
+.messageBox::-webkit-scrollbar-thumb {
+  width: 5px;
+  background: rosybrown;
+}
+.sendMessage {
+  margin-top: 20px;
+  height: 50px;
+  width: 100%;
+  border: 1px solid #95a5a6;
+  border-radius: 3px;
 }
 </style>

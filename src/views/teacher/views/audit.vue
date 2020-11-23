@@ -38,9 +38,9 @@
           <el-tag v-if="row.select_title_status == 2" type="success">
             已通过
           </el-tag>
-          <el-tag v-if="row.select_title_status == 4" type="info"
-            >已退回</el-tag
-          >
+          <el-tag v-if="row.select_title_status == 4" type="info">
+            已退回
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
@@ -65,6 +65,13 @@
               @click.stop="refuse(row)"
             ></el-button>
           </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="消息">
+        <template v-slot="{ row }">
+          <el-badge is-dot class="item" :hidden="!row.sendmessage">
+            <i class="el-icon-bell"></i>
+          </el-badge>
         </template>
       </el-table-column>
     </el-table>
@@ -251,5 +258,8 @@ export default {
   font-size: 16px;
   white-space: pre-wrap;
   line-height: 150%;
+}
+.item {
+  margin-top: 5px;
 }
 </style>
