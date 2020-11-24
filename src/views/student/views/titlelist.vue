@@ -304,6 +304,7 @@
     </el-dialog>
 
     <!-- 通信 -->
+
     <div class="connection" @click="startConnect">
       <el-tooltip
         class="item"
@@ -311,21 +312,35 @@
         content="与老师联系"
         placement="top"
       >
-        <img src="../../../public/img/lianxi.png" alt="" />
+        <el-badge
+          is-dot
+          class="item"
+          :hidden="
+            !this.stuinfo.receiveteamessage ||
+            this.stuinfo.receiveteamessage == 0
+          "
+        >
+          <img src="../../../public/img/lianxi.png" alt="" />
+        </el-badge>
       </el-tooltip>
     </div>
-    <!-- 通信对话框 -->
-    <el-dialog :visible.sync="connectionVisible" width="30%">
+
+    <!-- 通信聊天对话框 -->
+    <el-dialog
+      :visible.sync="connectionVisible"
+      width="30%"
+      @close="closeMessageBox"
+    >
       <div class="messageBox">
         <div v-for="(item, i) in messagecontent" :key="i">
           <p v-if="item.sender == 'tea'" style="width: 100%">
-            <el-card style="width: 69%; margin: 5px">123</el-card>
+            <el-card style="width: 69%; margin: 5px">{{ item.msg }}</el-card>
           </p>
           <p
             v-if="item.sender == 'stu'"
             style="width: 100%; display: flex; justify-content: flex-end"
           >
-            <el-card style="width: 69%; margin: 5px">123</el-card>
+            <el-card style="width: 69%; margin: 5px">{{ item.msg }}</el-card>
           </p>
         </div>
       </div>
@@ -621,11 +636,27 @@ export default {
       this.titleDetailShow = true;
       this.showTitleDetailInfo = row;
     },
+    closeMessageBox() {
+      this.messagecontent = [];
+    },
     // 点击聊天按钮是调取之前的聊天记录，点击发送才是调用socket
-    startConnect() {
+    async startConnect() {
+      await this.$api.studentAlreadyReadMessage({
+        id: this.stuinfo.id,
+      });
+      let res = await this.$api.showHistoryMessage({
+        studentid: this.stuinfo.id,
+        teacherid: this.stuinfo.teacherid,
+      });
+      res.data.forEach((item) => {
+        item.stuid = item.studentid;
+        item.teaid = item.teacherid;
+        this.messagecontent.push(item);
+      });
+      this.getStuInfo();
       this.connectionVisible = true;
     },
-    sendmessageto() {
+    async sendmessageto() {
       if (this.sendmessageinfo == "") {
         return;
       }
@@ -634,6 +665,9 @@ export default {
         teaid: this.stuinfo.teacherid,
         msg: this.sendmessageinfo,
         sender: "stu",
+      });
+      await this.$api.recordIfStuSendMessage({
+        id: this.stuinfo.id,
       });
       this.sendmessageinfo = "";
     },

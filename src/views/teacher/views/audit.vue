@@ -69,8 +69,12 @@
       </el-table-column>
       <el-table-column label="消息">
         <template v-slot="{ row }">
-          <el-badge is-dot class="item" :hidden="!row.sendmessage">
-            <i class="el-icon-bell"></i>
+          <el-badge
+            is-dot
+            class="item"
+            :hidden="!row.sendmessage || row.sendmessage == 0"
+          >
+            <i class="el-icon-bell" @click.stop="lookatmessage(row)"></i>
           </el-badge>
         </template>
       </el-table-column>
@@ -106,11 +110,69 @@
         </el-timeline-item>
       </el-timeline>
     </el-dialog>
+    <!-- 聊天框 -->
+    <el-dialog
+      :visible.sync="connectionVisible"
+      width="30%"
+      @close="closeMessageBox"
+    >
+      <div class="messageBox">
+        <div v-for="(item, i) in messagecontent" :key="i">
+          <p v-if="item.sender == 'stu'" style="width: 100%">
+            <el-card style="width: 69%; margin: 5px">{{ item.msg }}</el-card>
+          </p>
+          <p
+            v-if="item.sender == 'tea'"
+            style="width: 100%; display: flex; justify-content: flex-end"
+          >
+            <el-card style="width: 69%; margin: 5px">{{ item.msg }}</el-card>
+          </p>
+        </div>
+      </div>
+      <div>
+        <el-input
+          class="sendMessage"
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="sendmessageinfo"
+        >
+        </el-input>
+
+        <p style="width: 100%; text-align: right">
+          <el-button
+            size="mini"
+            style="margin-top: 10px"
+            @click="sendmessageto"
+          >
+            发送
+          </el-button>
+        </p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
+  // 配置socket通信
+  sockets: {
+    // socket.on 的注册事件放在这个对象中写，本身就含有connect等默认监听事件
+    connect: function (val) {
+      console.log("socket connected");
+    },
+    customEmit: function (data) {
+      console.log(
+        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
+      );
+    },
+    message(val) {
+      // console.log("id", this.stuinfo.id);
+      // console.log(val);
+      this.messagecontent.push(val);
+      console.log("this.message", this.messagecontent);
+    },
+  },
   data() {
     return {
       studentTableData: [],
@@ -119,6 +181,10 @@ export default {
       showTitleDetailInfo: {},
       rowStuInfo: {},
       applyhistory: [],
+      connectionVisible: false,
+      messagecontent: [],
+      sendmessageinfo: "",
+      sendMessageStuInfo: {},
     };
   },
   created() {
@@ -236,6 +302,48 @@ export default {
           });
         });
     },
+    async lookatmessage(row) {
+      // console.log(row);
+      this.sendMessageStuInfo = row;
+      // console.log("info", this.sendMessageStuInfo);
+      let res = await this.$api.showHistoryMessage({
+        studentid: row.id,
+        teacherid: this.id,
+      });
+      res.data.forEach((item) => {
+        item.stuid = item.studentid;
+        item.teaid = item.teacherid;
+        this.messagecontent.push(item);
+      });
+      console.log("start message", this.messagecontent);
+      this.connectionVisible = true;
+      // console.log(this.messagecontent);
+      await this.$api.teacherAlreadyReadMessage({
+        id: row.id,
+      });
+      this.teaGetSelectStuInfo();
+    },
+    closeMessageBox() {
+      this.sendMessageStuInfo = {};
+      this.messagecontent = [];
+      // console.log("clear info", this.sendMessageStuInfo);
+    },
+    // 发送消息接口
+    async sendmessageto() {
+      if (this.sendmessageinfo == "") {
+        return;
+      }
+      await this.$api.remindStudentMessage({
+        id: this.sendMessageStuInfo.id,
+      });
+      this.$socket.emit("server", {
+        stuid: this.sendMessageStuInfo.id,
+        teaid: this.id,
+        msg: this.sendmessageinfo,
+        sender: "tea",
+      });
+      this.sendmessageinfo = "";
+    },
   },
 };
 </script>
@@ -261,5 +369,29 @@ export default {
 }
 .item {
   margin-top: 5px;
+}
+.messageBox {
+  box-shadow: 5px 5px 5px #95a5a6;
+  height: 300px;
+  width: 100%;
+  border: 1px solid #95a5a6;
+  border-radius: 3px;
+  margin-top: 20px;
+  overflow-y: auto;
+}
+.messageBox::-webkit-scrollbar {
+  width: 5px;
+  background: rgba(243, 210, 178, 0.788);
+}
+.messageBox::-webkit-scrollbar-thumb {
+  width: 5px;
+  background: rosybrown;
+}
+.sendMessage {
+  margin-top: 20px;
+  height: 50px;
+  width: 100%;
+  border: 1px solid #95a5a6;
+  border-radius: 3px;
 }
 </style>
