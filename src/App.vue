@@ -3,6 +3,7 @@
  * @version: 
  * @Author: windowdotonload
 -->
+
 <template>
   <div id="app">
     <router-view />
