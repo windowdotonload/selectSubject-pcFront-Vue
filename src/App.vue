@@ -10,6 +10,12 @@
   </div>
 </template>
 
-
+<script>
+export default {
+  created() {
+    alert("modify");
+  },
+};
+</script>
 <style lang="scss">
 </style>
