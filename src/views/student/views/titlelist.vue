@@ -684,6 +684,7 @@ export default {
       });
       this.sendmessageinfo = "";
     },
+    // 学生点击修改选题按钮，弹出确认框
     stuSelectChangeTitle() {
       this.$confirm("确定修改选题？", "提示", {
         confirmButtonText: "确定",
