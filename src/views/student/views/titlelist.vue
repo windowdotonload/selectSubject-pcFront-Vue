@@ -27,7 +27,12 @@
     </el-button>
 
     <!-- 修改选题 -->
-    <el-button type="warning" size="mini" icon="el-icon-refresh-left">
+    <el-button
+      type="warning"
+      size="mini"
+      icon="el-icon-refresh-left"
+      @click="stuSelectChangeTitle"
+    >
       修改选题
     </el-button>
     <div
@@ -678,6 +683,20 @@ export default {
         id: this.stuinfo.id,
       });
       this.sendmessageinfo = "";
+    },
+    stuSelectChangeTitle() {
+      this.$confirm("确定修改选题？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {})
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
     },
   },
 };
