@@ -389,7 +389,9 @@ export default {
     message(val) {
       console.log("id", this.stuinfo.id);
       console.log(val);
-      this.messagecontent.push(val);
+      if (val.stuid == this.stuinfo.id && val.teaid == this.stuinfo.teacherid) {
+        this.messagecontent.push(val);
+      }
       console.log("this.message", this.messagecontent);
     },
   },
