@@ -9,13 +9,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  created() {
-    alert("modify version");
-  },
-};
-</script>
 
 <style lang="scss">
 </style>
