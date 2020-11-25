@@ -1,6 +1,6 @@
 <!--
  * @Descripttion:想要更改选题其实就是将学生的选题状态改为0，并且将之前的选题信息清除，将之前选择的题目信息还原为为选择
- *               具体是修改student-- select_title_status：0 ，更具学生表中titleid修改title -- status：0
+ *               具体是修改student-- select_title_status：0 ，根具学生表中titleid修改title -- status：0
  * @version: 
  * @Author: windowdotonload
 -->

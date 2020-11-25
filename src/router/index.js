@@ -78,10 +78,10 @@ const student = [
     }
   },
   {
-    path: "/changetitle", name: 'changetitle',
-    component: () => import('@/views/student/views/changetitle'),
+    path: "/applyhistory", name: 'applyhistory',
+    component: () => import('@/views/student/views/applyhistory'),
     meta: {
-      desc: "更换选题"
+      desc: "申请记录"
     }
   },
   {
@@ -91,6 +91,13 @@ const student = [
       desc: "最终得分"
     }
   },
+  // {
+  //   path: "/changetitle", name: 'changetitle',
+  //   component: () => import('@/views/student/views/changetitle'),
+  //   meta: {
+  //     desc: "更换选题"
+  //   }
+  // },
   // {
   //   path: "/titleapply", name: 'titleapply',
   //   component: () => import('@/views/student/views/titleapply'),

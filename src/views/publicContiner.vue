@@ -53,7 +53,8 @@
               :unique-opened="true"
               :collapse="istoggle"
               router
-              active-text-color="#ffd04b"
+              active-text-color="#5C9ACF"
+              text-color="#576574"
               class="el-menu-vertical-demo"
             >
               <div v-for="(item, i) in menuData" :key="i">

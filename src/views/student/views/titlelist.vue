@@ -1,5 +1,6 @@
 <template>
   <div class="continer">
+    <!-- 选择老师 -->
     <el-button
       @click="studentSelectTeacher"
       type="success"
@@ -9,6 +10,8 @@
     >
       选择老师
     </el-button>
+
+    <!-- 自定义选题 -->
     <el-button
       @click="studentCustomTitle"
       type="warning"
@@ -21,6 +24,11 @@
       "
     >
       自定义选题
+    </el-button>
+
+    <!-- 修改选题 -->
+    <el-button type="warning" size="mini" icon="el-icon-refresh-left">
+      修改选题
     </el-button>
     <div
       style="
