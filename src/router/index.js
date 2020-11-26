@@ -81,7 +81,7 @@ const student = [
     path: "/applyhistory", name: 'applyhistory',
     component: () => import('@/views/student/views/applyhistory'),
     meta: {
-      desc: "申请记录"
+      desc: "选题记录"
     }
   },
   {

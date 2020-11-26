@@ -116,7 +116,8 @@ export default {
   async created() {
     // this.menuData = admin;
     // this.breadData = this.$route.matched;
-    // console.log("matched   ", this.$route.matched);
+    console.log("route", this.$route);
+    console.log("matched   ", this.$route.matched);
     this.active = window.sessionStorage.getItem("active");
     this.username += window.sessionStorage.getItem("username");
   },

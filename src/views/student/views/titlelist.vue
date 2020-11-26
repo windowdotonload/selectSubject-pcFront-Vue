@@ -26,14 +26,17 @@
       自定义选题
     </el-button>
 
-    <!-- 修改选题 -->
+    <!-- 更换选题 -->
     <el-button
       type="warning"
       size="mini"
       icon="el-icon-refresh-left"
       @click="stuSelectChangeTitle"
+      v-if="
+        stuinfo.select_title_status == 1 || stuinfo.select_title_status == 2
+      "
     >
-      修改选题
+      更换选题
     </el-button>
     <div
       style="
@@ -265,7 +268,7 @@
     <!-- 自定义选题对话框 -->
     <el-dialog
       @close="closeDialog"
-      title="自定义选择"
+      title="自定义选题"
       :visible.sync="customDialogVisible"
       width="30%"
     >
@@ -691,7 +694,12 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {})
+        .then(async () => {
+          let res = await this.$api.modStuConfirmChangeTitle({
+            id: this.stuinfo.id,
+          });
+          this.getStuInfo();
+        })
         .catch(() => {
           this.$message({
             type: "info",

@@ -238,31 +238,16 @@ export default {
         type: "warning",
       })
         .then(async () => {
+          let res;
           if (row.ifcustom == 1) {
-            /**
-             * 学生自定义选题申请审核是，老师选择通过
-             * 首先将这条自定义题目加入到title表中，
-             * 然后再让这条题目被这条题目的申请学生选择，同时改变这条题目的状态为被选择
-             */
-            let addCustomTitleRes = await this.$api.addTitleInfo({
-              id: this.id,
-              title_name: row.title_name,
-              title_description: row.title_description,
+            res = await this.$api.teacherAuditCustomTitle({
+              id: row.id,
             });
-            // console.log(addCustomTitleRes);
-            let stuRes = await this.$api.confirmStudentSelTitle({
-              stuid: row.id,
-              titleid: addCustomTitleRes.data.id,
-              titlename: addCustomTitleRes.data.title_name,
-            });
-            let titleAfterChange = await this.$api.changeTitleStatus({
-              stuid: row.id,
-              titleid: addCustomTitleRes.data.id,
+          } else {
+            res = await this.$api.passStudentSelTitle({
+              id: row.id,
             });
           }
-          let res = await this.$api.passStudentSelTitle({
-            id: row.id,
-          });
           // console.log(res);
           if (res.msg == "success") {
             // console.log(res);

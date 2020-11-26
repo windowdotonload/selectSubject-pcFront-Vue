@@ -13,6 +13,11 @@
  * @version: 
  * @Author: windowdotonload
  */
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+ */
 import { get, post } from '@/api/globalRequest.js'
 
 export default {
@@ -61,5 +66,7 @@ export default {
     teacherAlreadyReadMessage: (params) => post("/teacherAlreadyReadMessage", params),
     studentAlreadyReadMessage: (params) => post("/studentAlreadyReadMessage", params),
     showHistoryMessage: (params) => get('/showHistoryMessage', params),
-    remindStudentMessage: (params) => post("/remindStudentMessage", params)
+    remindStudentMessage: (params) => post("/remindStudentMessage", params),
+    modStuConfirmChangeTitle: (params) => post("/modStuConfirmChangeTitle", params),
+    teacherAuditCustomTitle: (params) => post("/teacherAuditCustomTitle", params)
 }   
