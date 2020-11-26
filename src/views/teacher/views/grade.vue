@@ -15,13 +15,14 @@
       <el-table-column prop="gender" label="性别"> </el-table-column>
       <el-table-column prop="specialized_subject" label="专业">
       </el-table-column>
-      <el-table-column prop="calssname" label="班级"> </el-table-column>
+      <el-table-column prop="calssname" label="班级" align="center">
+      </el-table-column>
       <el-table-column prop="studentnumber" label="学号"> </el-table-column>
-      <el-table-column
-        prop="select_subject"
-        label="所选课题"
-        show-overflow-tooltip
-      >
+      <el-table-column label="所选课题" show-overflow-tooltip>
+        <template v-slot="{ row }">
+          <p v-if="row.select_subject">{{ row.select_subject }}</p>
+          <el-tag v-else>待定</el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column label="评分">

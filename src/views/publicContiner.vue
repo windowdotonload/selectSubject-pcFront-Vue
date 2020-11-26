@@ -64,7 +64,7 @@
                   @click="state(item.path)"
                   :index="item.path"
                 >
-                  <i class="el-icon-location"></i>
+                  <i :class="item.meta.icon"></i>
                   <span v-if="!istoggle" class="showDesc">{{
                     item.meta.desc
                   }}</span>
@@ -72,7 +72,7 @@
                 <!-- 如果一个路由有子路由那么使用二级菜单 -->
                 <el-submenu v-else :index="item.path">
                   <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <i :class="item.meta.icon"></i>
                     <span v-if="!istoggle" class="showDesc">
                       {{ item.meta.desc }}
                     </span>
@@ -83,6 +83,7 @@
                       :index="item1.path"
                       @click="state(item1.path)"
                     >
+                      <i :class="item1.meta.icon"></i>
                       <span class="showDesc">
                         {{ item1.meta.desc }}
                       </span>

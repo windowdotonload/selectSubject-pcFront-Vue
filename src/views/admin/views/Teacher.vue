@@ -213,6 +213,16 @@
 <script>
 export default {
   data() {
+    const checkUsernameExist = async (rule, value, callback) => {
+      let res = await this.$api.checkUsernameExist({ username: value });
+      if (res.msg == "success") {
+        if (res.data.msg == "exist") {
+          return callback(new Error("用户名已存在"));
+        } else {
+          return callback();
+        }
+      }
+    };
     const checkPhoneNumber = (rule, value, callback) => {
       if (!/^1[3456789]\d{9}$/.test(value)) {
         return callback(new Error("请输入正确的手机号"));
@@ -257,6 +267,7 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
+          { validator: checkUsernameExist, trigger: "blur" },
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },

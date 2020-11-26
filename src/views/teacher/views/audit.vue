@@ -67,7 +67,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="消息">
+      <el-table-column label="消息" align="center">
         <template v-slot="{ row }">
           <el-badge
             is-dot
@@ -271,10 +271,20 @@ export default {
       })
         .then(async () => {
           // 老师将一个学生的选题退回，学生选题状态变为被退回，而题目的状态直接可以变为待选择
-          let res = await this.$api.refuseStudentSelTitle({
-            id: row.id,
-            titlename: row.select_subject,
-          });
+          // 要判断是否为自定义
+          let res;
+          if (row.ifcustom == 1) {
+            res = await this.$api.refuseStudentSelTitle({
+              id: row.id,
+              titlename: row.title_name,
+            });
+          } else {
+            res = await this.$api.refuseStudentSelTitle({
+              id: row.id,
+              titlename: row.select_subject,
+            });
+          }
+
           if (res.msg == "success") {
             this.teaGetSelectStuInfo();
             this.$message.success("已退回");

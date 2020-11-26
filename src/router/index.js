@@ -10,7 +10,8 @@ const admin = [
     path: "/record", name: 'record',
     component: () => import('@/views/admin/views/createRecord'),
     meta: {
-      desc: "创建记录"
+      desc: "创建记录",
+      icon: 'el-icon-menu'
     }
   },
   {
@@ -18,7 +19,8 @@ const admin = [
     // 如果是子路由的子路由视图使用whiteContiner包裹
     component: () => import('@/components/whiteContiner'),
     meta: {
-      desc: '人员信息'
+      desc: '人员信息',
+      icon: 'el-icon-s-custom'
     },
     children: [
       // {
@@ -32,7 +34,8 @@ const admin = [
         path: '/adminTec', name: 'adminTec',
         component: () => import('@/views/admin/views/Teacher'),
         meta: {
-          desc: '教师面板'
+          desc: '教师面板',
+          icon: 'el-icon-s-check'
         },
       },
       {
@@ -50,21 +53,24 @@ const teacher = [
     path: "/addtitle", name: 'addtitle',
     component: () => import('@/views/teacher/views/addtitle'),
     meta: {
-      desc: "设计选题"
+      desc: "设计选题",
+      icon: 'el-icon-s-opportunity'
     }
   },
   {
     path: "/audit", name: 'audit',
     component: () => import('@/views/teacher/views/audit'),
     meta: {
-      desc: "申请审核"
+      desc: "申请审核",
+      icon: 'el-icon-s-check'
     }
   },
   {
     path: "/grade", name: 'grade',
     component: () => import('@/views/teacher/views/grade'),
     meta: {
-      desc: "给定评级"
+      desc: "给定评级",
+      icon: 'el-icon-s-cooperation'
     }
   },
 ]
@@ -74,21 +80,24 @@ const student = [
     path: "/titlelist", name: 'titlelist',
     component: () => import('@/views/student/views/titlelist'),
     meta: {
-      desc: "申请题目"
+      desc: "申请题目",
+      icon: 'el-icon-s-tools'
     }
   },
   {
     path: "/applyhistory", name: 'applyhistory',
     component: () => import('@/views/student/views/applyhistory'),
     meta: {
-      desc: "选题记录"
+      desc: "选题记录",
+      icon: 'el-icon-s-order'
     }
   },
   {
     path: "/score", name: 'score',
     component: () => import('@/views/student/views/score'),
     meta: {
-      desc: "最终得分"
+      desc: "最终得分",
+      icon: 'el-icon-camera-solid'
     }
   },
   // {

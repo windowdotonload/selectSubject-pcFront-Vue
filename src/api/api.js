@@ -68,5 +68,6 @@ export default {
     showHistoryMessage: (params) => get('/showHistoryMessage', params),
     remindStudentMessage: (params) => post("/remindStudentMessage", params),
     modStuConfirmChangeTitle: (params) => post("/modStuConfirmChangeTitle", params),
-    teacherAuditCustomTitle: (params) => post("/teacherAuditCustomTitle", params)
+    teacherAuditCustomTitle: (params) => post("/teacherAuditCustomTitle", params),
+    checkUsernameExist: (params) => get("/checkUsernameExist", params)
 }   

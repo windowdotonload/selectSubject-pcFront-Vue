@@ -8,6 +8,11 @@
  * @version: 
  * @Author: windowdotonload
  */
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+ */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -31,7 +36,7 @@ Vue.use(new VueSocketIO({
 Vue.config.productionTip = false
 Vue.prototype.$api = api
 
-Vue.filter('dateFormat', function (dataStr, pattern = "YYYY-MM-DD ") {
+Vue.filter('dateFormat', function (dataStr, pattern = "YYYY-MM-DD  h:mm:ss a") {
   return moment(dataStr).format(pattern)
 })
 
