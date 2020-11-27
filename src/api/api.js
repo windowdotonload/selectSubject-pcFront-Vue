@@ -76,5 +76,6 @@ export default {
     modStuConfirmChangeTitle: (params) => post("/modStuConfirmChangeTitle", params),
     teacherAuditCustomTitle: (params) => post("/teacherAuditCustomTitle", params),
     checkUsernameExist: (params) => get("/checkUsernameExist", params),
-    adminShowTeacherTitle: (params) => get('/adminShowTeacherTitle', params)
+    adminShowTeacherTitle: (params) => get('/adminShowTeacherTitle', params),
+    adminClickStuTitleInfo: (params) => get('/adminClickStuTitleInfo', params)
 }   

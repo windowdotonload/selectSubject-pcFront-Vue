@@ -29,6 +29,7 @@
         style="width: 100%"
         v-loading="loading"
         element-loading-text="学生数据载入中"
+        @row-click="showStuSelectTitle"
       >
         <el-table-column prop="username" label="用户名"> </el-table-column>
         <el-table-column
@@ -74,7 +75,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 circle
-                @click="editStudent(row)"
+                @click.stop="editStudent(row)"
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -88,7 +89,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 circle
-                @click="deleteStudent(row)"
+                @click.stop="deleteStudent(row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -140,11 +141,23 @@
         </span>
       </div>
     </el-dialog>
+    <!-- 点击学生表格某一行显示题目 -->
+    <el-dialog
+      title="题目详细信息"
+      :visible.sync="stuTitleDetailShow"
+      width="30%"
+    >
+      <stutitdetail :id="stuid"></stutitdetail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import stutitdetail from "@/components/studentApply.vue";
 export default {
+  components: {
+    stutitdetail,
+  },
   props: ["id", "status"],
   created() {
     // console.log("stu id is  ", this.id);
@@ -172,7 +185,9 @@ export default {
         recordid: 0,
       },
       count: 0,
+      stuid: 0,
       editDialogVisible: false,
+      stuTitleDetailShow: false,
       editStudentForm: {
         id: 0,
         password: "",
@@ -231,6 +246,16 @@ export default {
             message: "已取消删除",
           });
         });
+    },
+    // 显示学生选择的题目详情
+    showStuSelectTitle(row) {
+      console.log(row);
+      this.stuid = row.id;
+      if (!row.select_title_status || row.select_title_status == 0) {
+        this.$message.info("该学生暂未选题");
+        return;
+      }
+      this.stuTitleDetailShow = true;
     },
     handleSizeChange(val) {
       this.pageParams.pagesize = val;

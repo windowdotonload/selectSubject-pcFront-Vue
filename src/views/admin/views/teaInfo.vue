@@ -86,8 +86,13 @@
       </div>
     </el-dialog>
 
-    <!-- 教师所出题目表 -->
+    <!-- 教师所出题目弹框 -->
     <el-dialog title="所出题目详情" :visible.sync="teacherTitleVisible">
+      <p style="margin-left: 10px">
+        共
+        <strong style="margin: 5px">{{ count }}</strong>
+        条题目
+      </p>
       <el-table :data="teacherTitleTableData" style="width: 100%">
         <el-table-column prop="title_name" label="题目名称"> </el-table-column>
         <el-table-column
@@ -113,6 +118,7 @@ export default {
       titlenumber: 0,
       dialogVisible: false,
       teacherTitleVisible: false,
+      count: 0,
       pageParams: {
         pagesize: 5,
         pagenumber: 1,
@@ -175,13 +181,17 @@ export default {
         }
       });
     },
-
+    // 点击某一行显示这个教师所出题目的详情
     async showTeacherTitle(row) {
       // console.log(row);
       this.teacherTitleVisible = true;
-      let res = await this.$api.adminShowTeacherTitle(row);
+      let res = await this.$api.adminShowTeacherTitle({
+        teacherid: row.id,
+        recordid: this.id,
+      });
       if (res.msg == "success") {
         this.teacherTitleTableData = res.data;
+        this.count = this.teacherTitleTableData.length;
       }
     },
 
