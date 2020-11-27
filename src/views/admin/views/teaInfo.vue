@@ -9,7 +9,11 @@
     >
       选择教师
     </el-button>
-    <el-table :data="selectTableData" style="width: 100%">
+    <el-table
+      :data="selectTableData"
+      style="width: 100%"
+      @row-click="showTeacherTitle"
+    >
       <el-table-column prop="username" label="用户名"> </el-table-column>
       <el-table-column prop="password" label="密码" show-overflow-tooltip>
       </el-table-column>
@@ -19,8 +23,8 @@
       <el-table-column prop="phonenumber" label="手机号"> </el-table-column>
       <el-table-column prop="tecentqnumber" label="QQ"> </el-table-column>
       <el-table-column prop="professional" label="教师职称"> </el-table-column>
-      <el-table-column prop="titlenumber" label="毕设题目数量" align="center">
-      </el-table-column>
+      <!-- <el-table-column prop="titlenumber" label="毕设题目数量" align="center">
+      </el-table-column> -->
       <el-table-column align="center" label="操作" v-if="status == 1">
         <template v-slot="{ row }">
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
@@ -29,7 +33,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
-              @click="deleteSelectTeacher(row)"
+              @click.stop="deleteSelectTeacher(row)"
             ></el-button>
           </el-tooltip>
         </template>
@@ -81,6 +85,19 @@
         </span>
       </div>
     </el-dialog>
+
+    <!-- 教师所出题目表 -->
+    <el-dialog title="所出题目详情" :visible.sync="teacherTitleVisible">
+      <el-table :data="teacherTitleTableData" style="width: 100%">
+        <el-table-column prop="title_name" label="题目名称"> </el-table-column>
+        <el-table-column
+          prop="title_name"
+          label="题目描述"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -91,9 +108,11 @@ export default {
     return {
       tableData: [],
       selectTableData: [],
+      teacherTitleTableData: [],
       count: 0,
       titlenumber: 0,
       dialogVisible: false,
+      teacherTitleVisible: false,
       pageParams: {
         pagesize: 5,
         pagenumber: 1,
@@ -157,9 +176,21 @@ export default {
       });
     },
 
+    async showTeacherTitle(row) {
+      // console.log(row);
+      this.teacherTitleVisible = true;
+      let res = await this.$api.adminShowTeacherTitle(row);
+      if (res.msg == "success") {
+        this.teacherTitleTableData = res.data;
+      }
+    },
+
     // 根据对应的记录id和教师id在关系表中删除
     deleteSelectTeacher(row) {
       // console.log(row);
+      if (row.titlenumber != 0) {
+        return this.$message.info("该教师已出题");
+      }
       this.$confirm("是否确认删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

@@ -37,3 +37,11 @@ html,body,#app{
 .el-table .success-row {
     background: #f0f9eb;
 }
+.el-page-header__left::after {
+    content: "";
+    background: transparent;
+}
+.el-page-header__left{
+    margin-left: 5px;
+    margin-bottom: 10px;
+}

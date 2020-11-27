@@ -1,9 +1,9 @@
 <template>
   <div class="continer">
     <div>
-      <el-button type="primary" icon="el-icon-plus" @click="addRecord"
-        >创建</el-button
-      >
+      <el-button type="primary" icon="el-icon-plus" @click="addRecord">
+        创建
+      </el-button>
       <hr class="split" />
       <el-table
         :data="tableData"
@@ -387,7 +387,12 @@ export default {
       this.tableData = res.data.pageData;
       this.count = res.data.count;
     },
-    addRecord() {
+    async addRecord() {
+      // 创建新记录之前先检查是否有其他记录为完结
+      let res = await this.$api.checkOtherRecordFinish();
+      if (res.data.length != 0) {
+        return this.$message.info("当前有未完结的记录");
+      }
       this.dialogVisible = true;
     },
     submiRecord() {

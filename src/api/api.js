@@ -18,6 +18,11 @@
  * @version: 
  * @Author: windowdotonload
  */
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+ */
 import { get, post } from '@/api/globalRequest.js'
 
 export default {
@@ -26,6 +31,7 @@ export default {
     getRecord: (params) => get('/getRecord', params),
     deleteRecord: (params) => post('/deleteRecord', params),
     overRecord: (params) => post("/overRecord", params),
+    checkOtherRecordFinish: (params) => get("/checkOtherRecordFinish", params),
     checkUploadStatus: (params) => get('/checkUploadStatus', params),
     showStudent: (params) => get('/showStudent', params),
     addRecordId: (params) => get('/addRecordId', params),
@@ -69,5 +75,6 @@ export default {
     remindStudentMessage: (params) => post("/remindStudentMessage", params),
     modStuConfirmChangeTitle: (params) => post("/modStuConfirmChangeTitle", params),
     teacherAuditCustomTitle: (params) => post("/teacherAuditCustomTitle", params),
-    checkUsernameExist: (params) => get("/checkUsernameExist", params)
+    checkUsernameExist: (params) => get("/checkUsernameExist", params),
+    adminShowTeacherTitle: (params) => get('/adminShowTeacherTitle', params)
 }   

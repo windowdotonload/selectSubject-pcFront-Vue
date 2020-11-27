@@ -1,5 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+-->
 <template>
   <div>
+    <el-page-header @back="$router.go(-1)"> </el-page-header>
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="学生管理" name="stu">
         <stu :id="recordid" :status="status"></stu>
