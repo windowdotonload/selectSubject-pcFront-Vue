@@ -94,10 +94,11 @@ export default {
   },
   methods: {
     async score(row) {
-      console.log(row);
-      let res = this.$api.teacherSubmitScore(row);
+      // console.log(row);
+      let res = await this.$api.teacherSubmitScore(row);
       if (res.msg == "success") {
         this.teaGetSelectStuInfo();
+        this.$message.success("给定评级成功");
       }
     },
     async teaGetSelectStuInfo() {

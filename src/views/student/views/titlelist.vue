@@ -403,10 +403,10 @@ export default {
       );
     },
     message(val) {
-      console.log("id", this.stuinfo.id);
-      console.log(val);
+      // console.log("id", this.stuinfo.id);
+      // console.log(val);
       this.messagecontent.push(val);
-      console.log("this.message", this.messagecontent);
+      // console.log("this.message", this.messagecontent);
     },
   },
   data() {

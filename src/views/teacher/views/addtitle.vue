@@ -14,6 +14,19 @@
       </div>
     </el-dialog>
 
+    <p
+      style="
+        color: #dfe6ef;
+        margin-left: 8px;
+        margin-top: 10px;
+        margin-bottom: -5px;
+      "
+    >
+      共
+      <strong style="color: rgba(52, 73, 93, 0.6)"
+        >{{ tableData.length }} </strong
+      >条题目
+    </p>
     <el-table
       :data="tableData"
       style="width: 100%; margin-top: 10px"
