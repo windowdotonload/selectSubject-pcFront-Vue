@@ -50,6 +50,14 @@ const admin = [
 
 const teacher = [
   {
+    path: "/passrecord", name: 'passrecord',
+    component: () => import('@/views/teacher/views/passrecord'),
+    meta: {
+      desc: "过往记录",
+      icon: 'el-icon-video-camera-solid'
+    }
+  },
+  {
     path: "/addtitle", name: 'addtitle',
     component: () => import('@/views/teacher/views/addtitle'),
     meta: {

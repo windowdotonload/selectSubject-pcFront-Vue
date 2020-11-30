@@ -23,6 +23,11 @@
  * @version: 
  * @Author: windowdotonload
  */
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+ */
 import { get, post } from '@/api/globalRequest.js'
 
 export default {
@@ -77,5 +82,6 @@ export default {
     teacherAuditCustomTitle: (params) => post("/teacherAuditCustomTitle", params),
     checkUsernameExist: (params) => get("/checkUsernameExist", params),
     adminShowTeacherTitle: (params) => get('/adminShowTeacherTitle', params),
-    adminClickStuTitleInfo: (params) => get('/adminClickStuTitleInfo', params)
+    adminClickStuTitleInfo: (params) => get('/adminClickStuTitleInfo', params),
+    teacherLookUpPastRecord: (params) => get("/teacherLookUpPastRecord", params)
 }   
