@@ -184,7 +184,6 @@ export default {
     // 点击某一行显示这个教师所出题目的详情
     async showTeacherTitle(row) {
       // console.log(row);
-      this.teacherTitleVisible = true;
       let res = await this.$api.adminShowTeacherTitle({
         teacherid: row.id,
         recordid: this.id,
@@ -193,6 +192,7 @@ export default {
         this.teacherTitleTableData = res.data;
         this.count = this.teacherTitleTableData.length;
       }
+      this.teacherTitleVisible = true;
     },
 
     // 根据对应的记录id和教师id在关系表中删除

@@ -55,8 +55,15 @@ const teacher = [
     meta: {
       desc: "过往记录",
       icon: 'el-icon-video-camera-solid'
-    }
+    },
   },
+
+  {
+    path: "/teachershowtd/:id", name: 'teachershowtd',
+    props: true,
+    component: () => import('@/views/teacher/views/teachershowtd'),
+  },
+
   {
     path: "/addtitle", name: 'addtitle',
     component: () => import('@/views/teacher/views/addtitle'),

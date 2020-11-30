@@ -64,10 +64,10 @@
                   @click="state(item.path)"
                   :index="item.path"
                 >
-                  <i :class="item.meta.icon"></i>
-                  <span v-if="!istoggle" class="showDesc">{{
-                    item.meta.desc
-                  }}</span>
+                  <i :class="item.meta.icon"> </i>
+                  <span v-if="!istoggle" class="showDesc">
+                    {{ item.meta.desc }}
+                  </span>
                 </el-menu-item>
                 <!-- 如果一个路由有子路由那么使用二级菜单 -->
                 <el-submenu v-else :index="item.path">
@@ -121,6 +121,11 @@ export default {
     console.log("matched   ", this.$route.matched);
     this.active = window.sessionStorage.getItem("active");
     this.username += window.sessionStorage.getItem("username");
+    this.menuData = this.menuData.filter((item) => {
+      if (!!item.meta) {
+        return true;
+      }
+    });
   },
   watch: {
     "$route.matched"(val) {

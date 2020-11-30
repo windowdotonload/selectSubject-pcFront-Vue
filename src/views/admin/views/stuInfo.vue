@@ -39,17 +39,26 @@
           show-overflow-tooltip
         >
         </el-table-column>
-        <el-table-column prop="studentname" label="姓名"> </el-table-column>
-        <el-table-column prop="studentage" label="年龄"> </el-table-column>
-        <el-table-column prop="gender" label="性别"> </el-table-column>
-        <el-table-column prop="specialized_subject" label="专业">
+        <el-table-column
+          prop="studentname"
+          label="姓名"
+          show-overflow-tooltip
+          width="60"
+        >
+        </el-table-column>
+        <el-table-column prop="studentage" label="年龄" width="50">
+        </el-table-column>
+        <el-table-column prop="gender" label="性别" width="50" align="center">
+        </el-table-column>
+        <el-table-column prop="specialized_subject" label="专业" align="center">
         </el-table-column>
         <el-table-column prop="calssname" label="班级" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="studentnumber" label="学号"> </el-table-column>
-        <el-table-column prop="political_status" label="政治面貌">
+        <el-table-column prop="political_status" label="政治面貌" width="76">
         </el-table-column>
-        <el-table-column prop="ethnic_groups" label="民族"> </el-table-column>
+        <el-table-column prop="ethnic_groups" label="民族" width="50">
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="select_teacher"
@@ -92,6 +101,12 @@
                 @click.stop="deleteStudent(row)"
               ></el-button>
             </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="最终得分" align="center">
+          <template v-slot="{ row }">
+            <el-tag v-if="!row.score">待定</el-tag>
+            <p v-else>{{ row.score }}</p>
           </template>
         </el-table-column>
       </el-table>
