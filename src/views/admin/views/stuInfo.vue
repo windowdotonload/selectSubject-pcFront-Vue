@@ -64,6 +64,10 @@
           prop="select_teacher"
           label="所选老师"
         >
+          <template v-slot="{ row }">
+            <el-tag v-if="!row.select_teacher">待选</el-tag>
+            <p v-else>{{ row.select_teacher }}</p>
+          </template>
         </el-table-column>
         <el-table-column
           prop="select_subject"
