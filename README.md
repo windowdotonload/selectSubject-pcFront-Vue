@@ -73,7 +73,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 通信📡
 
-简单尝试了一下vue-socket，
+简单尝试了一下vue-socket。
 
 
 
