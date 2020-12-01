@@ -28,7 +28,7 @@
 <br>
 
 ### 全局接口请求API 🚁:  
-为了方便调用与维护，所求的api请求接口写在了[**src/api/api**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/api/api.jss) 文件中，并在[**src/api/globalRequest**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/api/globalRequest.js)文件中对axios的get和post请求进行了封装。  
+为了方便调用与维护，所求的api请求接口写在了[**src/api/api**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/api/api.js) 文件中，并在[**src/api/globalRequest**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/api/globalRequest.js)文件中对axios的get和post请求进行了封装。  
 <br>
 ### 登录与鉴权 💽：  
 本系统是采用的前后端分离模式开发， 所以鉴权主要是依靠JWT颁发令牌返回给前端，前端在获取到后端返回的token后存储到sessionstorage中，使用[axios拦截器](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/api/globalRequest.js)，每次请求之前在请求信息头部加上Authorization字段，这样可以一定程度上保证了安全性问题。   
