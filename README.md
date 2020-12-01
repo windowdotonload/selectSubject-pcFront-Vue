@@ -3,6 +3,11 @@
  * @version: 
  * @Author: windowdotonload
 -->
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+-->
 
 
 
@@ -43,7 +48,7 @@
 <br>  
 
 
-### 侧边栏 🎒：  
+### 侧边栏 📜：  
 侧边栏使用的是element-ui的el-menu，考虑到系统需要分为三个身份登录，每个身份对应的界面都需要有不同的侧边栏，如果是直接在template中写为固定的菜单比较麻烦，而且如果涉及到后期的功能扩展也不易维护。  
 所以决定让菜单栏的数据从路由对象中动态导入，在**router/index** 文件中，将三个身份对应的路由导出，侧边栏的菜单在遍历时根据路由对象的meta属性中desc获取，而菜单的小图标可以根据icon属性，动态绑定到class。
 
