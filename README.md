@@ -3,31 +3,10 @@
  * @version: 
  * @Author: windowdotonload
 -->
-# pc_vue
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-  
-<br/>
-<br/>
-<br/>
+
+
 
 ## 📰这是课程选题系统的前端部分实现，其中有几点写的比较有意思，也算是去尝试了一下Vue中的之前没太用过的API，在此做个记录，供日后参考  
 <br>  
@@ -74,6 +53,31 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### 通信📡
 
 简单尝试了一下vue-socket。
+
+
+  
+<br/>
+<br/>
+<br/>
+# pc_vue
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 
