@@ -8,26 +8,7 @@
  * @version: 
  * @Author: windowdotonload
  */
-/*
- * @Descripttion: 
- * @version: 
- * @Author: windowdotonload
- */
-/*
- * @Descripttion: 
- * @version: 
- * @Author: windowdotonload
- */
-/*
- * @Descripttion: 
- * @version: 
- * @Author: windowdotonload
- */
-/*
- * @Descripttion: 
- * @version: 
- * @Author: windowdotonload
- */
+
 import { get, post } from '@/api/globalRequest.js'
 
 export default {

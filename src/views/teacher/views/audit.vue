@@ -230,7 +230,7 @@ export default {
       }
     },
     pass(row) {
-      // console.log(row);
+      console.log(row);
       // debugger;
       this.$confirm("是否确认通过?", "提示", {
         confirmButtonText: "确定",
@@ -242,10 +242,12 @@ export default {
           if (row.ifcustom == 1) {
             res = await this.$api.teacherAuditCustomTitle({
               id: row.id,
+              title_name: row.title_name,
             });
           } else {
             res = await this.$api.passStudentSelTitle({
               id: row.id,
+              title_name: row.select_subject,
             });
           }
           // console.log(res);
