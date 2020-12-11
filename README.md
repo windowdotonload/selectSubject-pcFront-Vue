@@ -45,7 +45,12 @@
 
 ### 组件的复用 🔃 :
 虽然是分为了三个不同的身份登录，但操作界面都大体相似，Vue中的extends为组件的复用提供了便利。
-三个身份的操作界面都继承自[**views/publicContiner**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/views/publicContiner.vue)组件，而侧边栏和面包的数据是不同的，需要在继承的时候将数据覆盖为对应身份组件本身的数据。
+三个身份的操作界面都继承自[**views/publicContiner**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/views/publicContiner.vue)组件，而侧边栏和面包的数据是不同的，需要在继承的时候将数据覆盖为对应身份组件本身的数据。  
+<br>    
+### 面包屑 🍞:
+面包屑是根据route对象的matched属性获取，这样当有二级菜单时，也可以显示出一个层级关系。    
+
+
 <br>  
 
 
@@ -55,10 +60,7 @@
 
 <br>  
  
-### 面包屑 🍞:
-面包屑是根据route对象的matched属性获取，这样当有二级菜单时，也可以显示出一个层级关系。  
 
-<br>  
 
 ### 通信📡
 
