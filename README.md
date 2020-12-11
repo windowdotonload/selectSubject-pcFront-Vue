@@ -3,6 +3,11 @@
  * @version: 
  * @Author: windowdotonload
 -->
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: windowdotonload
+-->
 
 
 
@@ -38,7 +43,7 @@
   
 <br>  
 
-### 界面的复用 🔃 :
+### 组件的复用 🔃 :
 虽然是分为了三个不同的身份登录，但操作界面都大体相似，Vue中的extends为组件的复用提供了便利。
 三个身份的操作界面都继承自[**views/publicContiner**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/views/publicContiner.vue)组件，而侧边栏和面包的数据是不同的，需要在继承的时候将数据覆盖为对应身份组件本身的数据。
 <br>  
@@ -46,7 +51,7 @@
 
 ### 侧边栏 📜：  
 侧边栏使用的是element-ui的el-menu，考虑到系统需要分为三个身份登录，每个身份对应的界面都需要有不同的侧边栏，如果是直接在template中写为固定的菜单比较麻烦，而且如果涉及到后期的功能扩展也不易维护。  
-所以决定让菜单栏的数据从路由对象中动态导入，在[**router/index**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/router/index.js) 文件中，将三个身份对应的路由导出，侧边栏的菜单在遍历时根据路由对象的meta属性中desc获取，而菜单的小图标可以根据icon属性，动态绑定到class。
+所以决定让菜单栏的数据从**路由对象中动态导入**，在[**router/index**](https://github.com/windowdotonload/selectSubject-pcFront-Vue/blob/main/src/router/index.js) 文件中，将三个身份对应的路由导出，侧边栏的菜单在遍历时根据路由对象的meta属性中desc获取，而菜单的小图标可以根据icon属性，动态绑定到class。
 
 <br>  
  
