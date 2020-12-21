@@ -148,11 +148,23 @@ export default {
       this.$refs.multipleTable.clearSelection();
     },
     selectTeacher() {
+      this.showTeacherSelectStatus();
       this.dialogVisible = true;
     },
     async showTeacher() {
       let res = await this.$api.showTeacher(this.pageParams);
       this.tableData = res.data.pageData;
+      this.$nextTick(() => {
+        this.tableData
+          .filter((item1) => {
+            return this.selectTableData.some((item2) => {
+              return item2.id == item1.id;
+            });
+          })
+          .forEach((item) => {
+            this.$refs.multipleTable.toggleRowSelection(item, true);
+          });
+      });
       this.count = res.data.count;
     },
     async showSelectTeacher() {
@@ -169,7 +181,23 @@ export default {
         this.showSelectTeacher();
       }
     },
-
+    // 打开选择老师对话框显示那些老师已经被选择
+    showTeacherSelectStatus() {
+      // console.log("selection");
+      this.showTeacher();
+      // this.$nextTick(() => {
+      //   console.log("$refs", this.$refs);
+      //   let arr = this.tableData.filter((item1) => {
+      //     console.log("item1", item1);
+      //     return this.selectTableData.some((item2) => {
+      //       return item2.id == item1.id;
+      //     });
+      //   });
+      //   arr.forEach((item) => {
+      //     this.$refs.multipleTable.toggleRowSelection(item, true);
+      //   });
+      // });
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
       this.postParams.teacherid = [];
