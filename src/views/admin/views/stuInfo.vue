@@ -24,6 +24,14 @@
         <i class="el-icon-warning-outline icon-self"></i>
         <span class="tip">只能上传xlsx文件</span>
       </el-upload>
+      <el-button size="mini" type="success">
+        <a
+          href="http://127.0.0.1:7001/test"
+          style="text-decoration: none; color: white; margin-left: -3px"
+        >
+          导出当前学生信息
+        </a>
+      </el-button>
       <el-table
         :data="tableData"
         style="width: 100%"
